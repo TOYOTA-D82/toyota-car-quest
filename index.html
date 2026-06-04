@@ -291,7 +291,7 @@ function newGame(){
     traveled:0,speed:1.05,scroll:0,
     gates:[],coins:[],cones:[],decor:[],
     gatesSpawned:0,gatesDecided:0,nextGateDist:240,gateGap:430,
-    nextCoinDist:150,nextDecorDist:60,
+    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,
     coinCount:0,hits:0,startT:0,
     scenesRun:pickScenes(4),curScene:0,sceneFade:1,
     finished:false,last:null,raf:0,flash:0,shake:0,tipHidden:false};
@@ -308,8 +308,6 @@ function setPrompt(){const el=document.getElementById('ghud');
 
 /* ===== 生成 ===== */
 function spawnGate(){const qi=G.gatesSpawned;
-  // 只清掉「剛從右側進場、會貼著路口」的物件（最右側一小條），不動畫面中央玩家正在互動的物件
-  G.cones=G.cones.filter(o=>o.x<320);G.coins=G.coins.filter(c=>c.x<320);
   G.gates.push({x:W+12,w:92,qi,order:shuffle(4),decided:false,chosen:-1});G.gatesSpawned++;setPrompt();}
 function spawnCoin(){const l=Math.random()*LANES|0;G.coins.push({x:W+10,lane:l,got:false});}
 function spawnCone(){const l=Math.random()*LANES|0;G.cones.push({x:W+10,lane:l,hit:false});}
@@ -330,10 +328,20 @@ function update(){const g=G;
   if(g.sceneFade<1)g.sceneFade=Math.min(1,g.sceneFade+0.02);
 
   if(g.gatesSpawned<QUESTIONS.length&&g.traveled>=g.nextGateDist){spawnGate();g.nextGateDist+=g.gateGap;}
-  // 前方有路口、或路口即將出現時，暫停生成金幣/三角錐 → 路口跑道乾淨，且不會整批清除畫面上的物件
-  const gateAhead=g.gates.some(ga=>!ga.decided&&ga.x>g.carX-30);
-  const gateSoon=g.gatesSpawned<QUESTIONS.length&&(g.nextGateDist-g.traveled)<150;
-  if(g.traveled>=g.nextCoinDist){if(!gateAhead&&!gateSoon){Math.random()<0.74?spawnCoin():spawnCone();}g.nextCoinDist+=64+Math.random()*70;}
+  const qLeft=g.gatesSpawned<QUESTIONS.length;
+  const untilGate=g.nextGateDist-g.traveled;
+  const gateAtEntry=g.gates.some(ga=>ga.x>286&&ga.x<400); // 路口正從右側進場，避免物件疊在牆上
+  // 金幣：高頻率。新物件都從最右側進場，永遠在現有路口的「後方」，因此不會貼著選項；
+  // 只在「路口正進場」或「下一個路口快出現(140內)」時暫停 → 不會整批清除、也不會突然消失
+  if(g.traveled>=g.nextCoinDist){
+    if(!gateAtEntry&&!(qLeft&&untilGate<140))spawnCoin();
+    g.nextCoinDist+=30+Math.random()*34;
+  }
+  // 三角錐：頻率較低，且離路口更遠(210內不放) → 選答案的跑道一定乾淨，不會逼你撞
+  if(g.traveled>=g.nextConeDist){
+    if(!gateAtEntry&&!(qLeft&&untilGate<210))spawnCone();
+    g.nextConeDist+=140+Math.random()*90;
+  }
   if(g.traveled>=g.nextDecorDist){spawnDecor();g.nextDecorDist+=50+Math.random()*70;}
 
   // 水平：自由平滑前後
