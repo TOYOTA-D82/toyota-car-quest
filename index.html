@@ -148,9 +148,7 @@
     <section class="view" id="result">
       <div class="res-label">★ 我的命定車款 ★</div>
       <img id="cardImg" alt="我的命定車款">
-      <div class="res-label" style="margin-top:8px;">其他適合你的選擇</div>
-      <div class="alts" id="alts"></div>
-      <button class="btn red" onclick="bookTest()">🚗 我想預約賞車</button>
+      <button class="btn red" onclick="bookTest()" style="margin-top:12px;">🚗 我想預約賞車</button>
       <button class="btn blue" onclick="downloadCard()">💾 下載 Game Boy 卡片</button>
       <button class="btn ghost" onclick="restart()">↺ 再玩一次</button>
       <p class="foot">※ 推薦結果僅供參考，實際購車歡迎洽詢 Taiwan TOYOTA 各據點</p>
@@ -163,7 +161,7 @@
     <div class="speaker"><i></i><i></i><i></i></div>
   </div>
 </div>
-<canvas id="card" width="540" height="720" style="display:none;"></canvas>
+<canvas id="card" width="540" height="760" style="display:none;"></canvas>
 
 <script>
 /* ===== 預約連結 ===== */
@@ -469,8 +467,8 @@ function wrapText(text,x,y,maxW,lh){let line='';
   for(const ch of text){const test=line+ch;
     if(cctx.measureText(test).width>maxW&&line){cctx.fillText(line,x,y);line=ch;y+=lh;}else line=test;}
   if(line)cctx.fillText(line,x,y);return y;}
-function buildCard(winner,car,match,coins,hits,nick){
-  const w=540,h=720;
+function buildCard(winner,car,match,coins,hits,nick,alts){
+  const w=540,h=760;
   cctx.clearRect(0,0,w,h);
   rect2(0,0,w,h,'#1c1e22');
   // ===== Game Boy 邊框（只是外框，內容才是主角）=====
@@ -492,28 +490,36 @@ function buildCard(winner,car,match,coins,hits,nick){
 
   // ===== 螢幕內容（主角）=====
   const cx=w/2;cctx.textAlign='center';
-  rr(sx+30,sy+16,sw-60,42,7,'#ffd83d');rr(sx+30,sy+16,sw-60,6,7,'#ffe9a0');
-  cctx.fillStyle='#7a3b00';cctx.font='900 12px "Noto Sans TC",sans-serif';cctx.fillText('★ 你 的 駕 駛 稱 號 ★',cx,sy+32);
-  cctx.fillStyle='#1a1207';cctx.font='900 23px "Noto Sans TC",sans-serif';cctx.fillText(nick,cx,sy+53);
+  rr(sx+30,sy+14,sw-60,40,7,'#ffd83d');rr(sx+30,sy+14,sw-60,6,7,'#ffe9a0');
+  cctx.fillStyle='#7a3b00';cctx.font='900 12px "Noto Sans TC",sans-serif';cctx.fillText('★ 你 的 駕 駛 稱 號 ★',cx,sy+29);
+  cctx.fillStyle='#1a1207';cctx.font='900 22px "Noto Sans TC",sans-serif';cctx.fillText(nick,cx,sy+49);
   // 車
-  drawCarBig(cx,sy+124,14,car.color[0],car.color[1]);
+  drawCarBig(cx,sy+114,13,car.color[0],car.color[1]);
   // 車名 / 標語
-  cctx.fillStyle='#9bbc0f';cctx.font='900 36px "Noto Sans TC",sans-serif';cctx.fillText(car.name,cx,sy+204);
-  cctx.fillStyle='#cfe3a0';cctx.font='600 16px "Noto Sans TC",sans-serif';cctx.fillText('「'+car.tag+'」',cx,sy+228);
+  cctx.fillStyle='#9bbc0f';cctx.font='900 33px "Noto Sans TC",sans-serif';cctx.fillText(car.name,cx,sy+190);
+  cctx.fillStyle='#cfe3a0';cctx.font='600 15px "Noto Sans TC",sans-serif';cctx.fillText('「'+car.tag+'」',cx,sy+212);
   // 契合度
-  rr(cx-80,sy+242,160,36,8,'#27412a');cctx.fillStyle='#ffe07a';cctx.font='bold 19px "Press Start 2P",monospace';cctx.fillText(match+'%',cx,sy+260);
-  cctx.fillStyle='#9ab87a';cctx.font='600 12px "Noto Sans TC",sans-serif';cctx.fillText('命定契合度',cx,sy+294);
+  rr(cx-78,sy+224,156,34,8,'#27412a');cctx.fillStyle='#ffe07a';cctx.font='bold 18px "Press Start 2P",monospace';cctx.fillText(match+'%',cx,sy+247);
+  cctx.fillStyle='#9ab87a';cctx.font='600 12px "Noto Sans TC",sans-serif';cctx.fillText('命定契合度',cx,sy+272);
   // 兩宮格（金幣 / 撞錐）
   const stats=[['🪙 金幣',coins],['🚧 撞錐',hits]];
-  const pw=sw*0.34,gp=(sw-pw*2)/3,top=sy+308;
-  stats.forEach((st,i)=>{const x=sx+gp+i*(pw+gp);rr(x,top,pw,50,6,'#13261a');rect2(x,top,pw,3,'#2c4a2e');
-    cctx.fillStyle='#9ab87a';cctx.font='600 13px "Noto Sans TC",sans-serif';cctx.fillText(st[0],x+pw/2,top+19);
-    cctx.fillStyle='#eaffd6';cctx.font='900 22px "Noto Sans TC",sans-serif';cctx.fillText(st[1],x+pw/2,top+42);});
+  const pw=sw*0.34,gp=(sw-pw*2)/3,top=sy+284;
+  stats.forEach((st,i)=>{const x=sx+gp+i*(pw+gp);rr(x,top,pw,46,6,'#13261a');rect2(x,top,pw,3,'#2c4a2e');
+    cctx.fillStyle='#9ab87a';cctx.font='600 13px "Noto Sans TC",sans-serif';cctx.fillText(st[0],x+pw/2,top+18);
+    cctx.fillStyle='#eaffd6';cctx.font='900 21px "Noto Sans TC",sans-serif';cctx.fillText(st[1],x+pw/2,top+39);});
   // 車款介紹（自動換行）
-  cctx.fillStyle='#cde3b0';cctx.font='600 15px "Noto Sans TC",sans-serif';
-  wrapText(car.desc,cx,sy+400,sw-54,22);
+  cctx.fillStyle='#cde3b0';cctx.font='600 14px "Noto Sans TC",sans-serif';
+  wrapText(car.desc,cx,sy+352,sw-54,20);
+  // 分隔線 + 也很適合的車款
+  rect2(sx+40,sy+418,sw-80,2,'#2c4a2e');
+  cctx.fillStyle='#9ab87a';cctx.font='700 13px "Noto Sans TC",sans-serif';cctx.fillText('— 你 也 很 適 合 這 些 車 —',cx,sy+436);
+  const aw=(sw-30)/2,ay=sy+448,ah=64;
+  (alts||[]).slice(0,2).forEach((ac,i)=>{const ax=sx+10+i*(aw+10);
+    rr(ax,ay,aw,ah,7,'#16301a');rect2(ax,ay,aw,3,'#2c4a2e');
+    drawCarBig(ax+aw/2,ay+24,5,ac.color[0],ac.color[1]);
+    cctx.fillStyle='#eaffd6';cctx.font='800 15px "Noto Sans TC",sans-serif';cctx.fillText(ac.name,ax+aw/2,ay+55);});
   // 螢幕內 CTA
-  cctx.fillStyle='#7d9a5f';cctx.font='700 14px "Noto Sans TC",sans-serif';cctx.fillText('你的命定車款是？快來測測看！',cx,sy+sh-16);
+  cctx.fillStyle='#7d9a5f';cctx.font='700 14px "Noto Sans TC",sans-serif';cctx.fillText('你的命定車款是？快來測測看！',cx,sy+sh-14);
 
   // ===== 邊框下方品牌帶（小，點綴）=====
   cctx.textAlign='left';
@@ -532,10 +538,8 @@ function finish(){if(G.finished)return;G.finished=true;cancelAnimationFrame(G.ra
   const s=G.scores,ranked=Object.keys(s).sort((a,b)=>s[b]-s[a]),winner=ranked[0],car=CARS[winner];
   const match=Math.min(98,68+Math.round(s[winner]*1.4));
   const nick=nickname(winner,G.coinCount,G.hits);
-  const altBox=document.getElementById('alts');altBox.innerHTML='';
-  ranked.slice(1,3).forEach(k=>{const d=document.createElement('div');d.className='alt';
-    d.innerHTML=`<span>也很適合</span><b>${CARS[k].name}</b>`;altBox.appendChild(d);});
-  const render=()=>{document.getElementById('cardImg').src=buildCard(winner,car,match,G.coinCount,G.hits,nick);};
+  const alts=ranked.slice(1,3).map(k=>CARS[k]);
+  const render=()=>{document.getElementById('cardImg').src=buildCard(winner,car,match,G.coinCount,G.hits,nick,alts);};
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render);else render();
   show('result');
   beep(660,0.08);setTimeout(()=>beep(880,0.08),90);setTimeout(()=>beep(1040,0.16),190);
