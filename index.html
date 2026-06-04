@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TOYOTA 公路選車之旅｜像素駕駛小遊戲</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{--toyota-red:#EB0A1E;--screen-bg:#0f1c10;--screen-dim:#16301a;
+    --pixel-green:#9bbc0f;--pixel-green-d:#306230;--ink:#0b160c;--paper:#dff0d8;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{background:radial-gradient(circle at 50% 20%,#2a2d31 0%,#15171a 70%,#0c0d0f 100%);
+    font-family:"Press Start 2P","Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;min-height:100%;padding:14px;overflow-x:hidden;}
+  .console{width:min(440px,96vw);background:linear-gradient(145deg,#e9ebee,#c4c8cd);
+    border-radius:18px 18px 42px 18px;padding:16px 16px 22px;
+    box-shadow:0 18px 40px #000a,inset 0 2px 0 #ffffffaa,inset 0 -6px 16px #0003;border:2px solid #b3b7bc;position:relative;}
+  .brandbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:0 4px;}
+  .brandbar .logo{font-size:10px;letter-spacing:1px;color:var(--toyota-red);text-shadow:1px 1px 0 #fff;}
+  .brandbar .tw{font-size:7px;color:#5a5f64;letter-spacing:1px;}
+  .screen-wrap{background:#3a3d42;border-radius:12px;padding:12px;box-shadow:inset 0 0 0 3px #2a2c30,inset 0 4px 12px #000a;}
+  .screen{position:relative;background:linear-gradient(180deg,var(--screen-bg),var(--screen-dim));border-radius:6px;
+    min-height:448px;padding:12px;overflow:hidden;color:var(--paper);box-shadow:inset 0 0 24px #000a,inset 0 0 0 2px #0a160b;}
+  .screen::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,#0000 0 2px,#0002 2px 4px);mix-blend-mode:multiply;border-radius:6px;z-index:30;}
+  .view{display:none;animation:fade .25s ease both;}.view.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  p{margin:0;}
+  .sprite{display:grid;margin:0 auto;image-rendering:pixelated;}
+  .sprite>i{display:block;width:100%;height:100%;}
+  #start,#result{text-align:center;}
+  .title-cn{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:23px;letter-spacing:1px;
+    color:var(--pixel-green);text-shadow:2px 2px 0 var(--pixel-green-d),3px 3px 0 #000;margin-top:2px;}
+  .title-en{font-size:8px;color:#cfe3a0;margin:7px 0 2px;letter-spacing:2px;}
+  .sub{font-family:"Noto Sans TC",sans-serif;font-size:12px;color:#bcd49a;line-height:1.7;margin:10px 8px 0;}
+  /* 操作說明卡 */
+  .howto{background:#0a160b;border:2px solid #2c4a2e;border-radius:6px;padding:10px 12px;margin:12px 2px 0;text-align:left;}
+  .howto h3{font-family:"Noto Sans TC",sans-serif;font-size:12px;color:var(--pixel-green);margin:0 0 8px;letter-spacing:1px;}
+  .ctrl{display:flex;align-items:center;gap:9px;margin:7px 0;font-family:"Noto Sans TC",sans-serif;font-size:11.5px;color:#dff0d8;line-height:1.4;}
+  .ctrl .ico{flex:0 0 auto;min-width:46px;height:30px;display:flex;align-items:center;justify-content:center;gap:3px;
+    background:#1b3320;border:2px solid #3a5e3e;border-radius:5px;font-size:14px;color:#eaffd6;font-weight:700;}
+  .ctrl b{color:var(--pixel-green);}
+  .blink{animation:blink 1s steps(2,start) infinite;}
+  @keyframes blink{to{visibility:hidden;}}
+  .btn{font-family:"Noto Sans TC",sans-serif;font-weight:700;cursor:pointer;border:none;background:var(--pixel-green);
+    color:var(--ink);padding:12px 14px;border-radius:4px;width:100%;font-size:14px;
+    box-shadow:0 4px 0 var(--pixel-green-d),0 5px 0 #000;transition:transform .05s,box-shadow .05s;
+    display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;}
+  .btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--pixel-green-d);}
+  .btn.red{background:var(--toyota-red);color:#fff;box-shadow:0 4px 0 #8c0612,0 5px 0 #000;}
+  .btn.red:active{box-shadow:0 0 0 #8c0612;}
+  .btn.ghost{background:#27412a;color:#cfe3a0;box-shadow:0 4px 0 #14240f,0 5px 0 #000;}
+  .btn.blue{background:#2d9cdb;color:#fff;box-shadow:0 4px 0 #1c6fa0,0 5px 0 #000;}
+  #play{display:none;}#play.active{display:block;}
+  .ghud{font-family:"Noto Sans TC",sans-serif;font-weight:800;font-size:15px;color:#eaffd6;background:#0a160b;
+    border:2px solid #2c4a2e;border-radius:4px;padding:9px 10px;margin-bottom:8px;text-align:center;line-height:1.4;
+    min-height:40px;display:flex;align-items:center;justify-content:center;}
+  .ghud b{color:var(--pixel-green);}
+  .gamewrap{position:relative;}
+  canvas#game{width:100%;height:auto;aspect-ratio:360/320;image-rendering:pixelated;background:#20242a;
+    border-radius:4px;display:block;touch-action:none;border:2px solid #0a160b;}
+  /* 進場提示 */
+  #tip{position:absolute;left:0;right:0;bottom:10px;text-align:center;pointer-events:none;transition:opacity .5s;}
+  #tip span{font-family:"Noto Sans TC",sans-serif;font-size:12px;font-weight:700;color:#fff;background:#000a;
+    padding:6px 12px;border-radius:20px;border:1px solid #ffffff44;}
+  .pad{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px;}
+  .padcluster{display:flex;gap:14px;}
+  .padcol{display:flex;gap:6px;}
+  .padcol .lab{font-family:"Noto Sans TC",sans-serif;font-size:8px;color:#7d9a5f;text-align:center;}
+  .padbtn{width:50px;height:46px;border:none;border-radius:6px;background:#3a3d42;color:#fff;font-size:20px;
+    box-shadow:0 4px 0 #1f2226;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;}
+  .padbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #1f2226;}
+  .hint{font-family:"Noto Sans TC",sans-serif;font-size:9px;color:#7d9a5f;text-align:right;line-height:1.4;}
+  .res-label{font-size:8px;color:#cfe3a0;letter-spacing:2px;margin-bottom:4px;}
+  #cardImg{width:100%;max-width:300px;image-rendering:auto;border-radius:8px;box-shadow:0 6px 18px #000a;display:block;margin:0 auto;}
+  .desc{font-family:"Noto Sans TC",sans-serif;font-size:12px;color:#dff0d8;line-height:1.65;background:#0a160b;
+    border:2px solid #2c4a2e;border-radius:4px;padding:9px 11px;margin:10px 0;text-align:left;}
+  .alts{display:flex;gap:8px;margin:8px 0;}
+  .alt{flex:1;background:#16301a;border:2px solid #2c4a2e;border-radius:4px;padding:7px 6px;
+    font-family:"Noto Sans TC",sans-serif;font-size:10px;color:#cfe3a0;text-align:center;}
+  .alt b{display:block;color:#eaffd6;font-size:11px;margin-top:3px;}
+  .foot{font-family:"Noto Sans TC",sans-serif;font-size:9px;color:#7d9a5f;margin-top:10px;}
+  .controls{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 6px;}
+  .dpad{position:relative;width:50px;height:50px;}
+  .dpad i{position:absolute;background:#3a3d42;border-radius:3px;box-shadow:inset 0 0 0 2px #2a2c30;}
+  .dpad .h{top:17px;left:0;width:50px;height:16px;}.dpad .v{left:17px;top:0;width:16px;height:50px;}
+  .ab{display:flex;gap:10px;}
+  .ab b{width:24px;height:24px;border-radius:50%;background:var(--toyota-red);
+    box-shadow:inset 0 -3px 0 #00000044,0 2px 2px #0006;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;}
+  .speaker{display:flex;gap:4px;transform:rotate(-20deg);}
+  .speaker i{width:4px;height:18px;background:#aab0b6;border-radius:2px;}
+  @media (max-width:380px){.title-cn{font-size:19px;}}
+</style>
+</head>
+<body>
+<div class="console">
+  <div class="brandbar"><span class="logo">TOYOTA</span><span class="tw">★ TAIWAN ★</span></div>
+  <div class="screen-wrap"><div class="screen">
+
+    <!-- 開始 -->
+    <section class="view active" id="start">
+      <div id="startSprite" style="margin-top:6px;"></div>
+      <div class="title-cn">公路選車之旅</div>
+      <div class="title-en">ROAD&nbsp;TRIP&nbsp;CAR&nbsp;QUEST</div>
+      <div class="howto">
+        <h3>🎮 操作說明</h3>
+        <div class="ctrl"><span class="ico">▲<br></span><span class="ico">▼</span>
+          <span><b>上下</b>：在 4 條車道間切換，把車開到你想選的「路牌」</span></div>
+        <div class="ctrl"><span class="ico">◀ ▶</span>
+          <span><b>左右</b>：自由控制前進／後退，調整衝向路牌的時機</span></div>
+        <div class="ctrl"><span class="ico">🪙</span>
+          <span>沿路<b>收金幣</b>加分，<b>閃避三角錐</b>（撞到會扣分＋震動）</span></div>
+        <div class="ctrl"><span class="ico">🏁</span>
+          <span>跑完 <b>10 個路口</b>，推薦你的命定車款＋專屬稱號</span></div>
+        <div class="ctrl" style="font-size:10.5px;color:#9ab87a;margin-top:9px;">
+          📱 手機：直接<b>用手指拖曳</b>小車即可同時控制上下左右</div>
+      </div>
+      <button class="btn red" onclick="startGame()"><span class="blink">▶ PRESS START</span></button>
+      <p class="sub" style="font-size:9px;color:#7d9a5f;margin-top:10px;">© Taiwan TOYOTA ・ 像素選車小遊戲</p>
+    </section>
+
+    <!-- 遊戲 -->
+    <section class="view" id="play">
+      <div class="ghud" id="ghud">準備出發！</div>
+      <div class="gamewrap">
+        <canvas id="game" width="360" height="320"></canvas>
+        <div id="tip"><span>↑↓ 換車道　←→ 控制前後　拖曳也可以！</span></div>
+      </div>
+      <div class="pad">
+        <div class="padcluster">
+          <div class="padcol">
+            <button class="padbtn" id="btnUp">▲</button>
+            <button class="padbtn" id="btnDown">▼</button>
+          </div>
+          <div class="padcol">
+            <button class="padbtn" id="btnBack">◀</button>
+            <button class="padbtn" id="btnFwd">▶</button>
+          </div>
+        </div>
+        <div class="hint">▲▼ 換車道<br>◀▶ 前後</div>
+      </div>
+    </section>
+
+    <!-- 結果 -->
+    <section class="view" id="result">
+      <div class="res-label">★ 我的命定車款 ★</div>
+      <img id="cardImg" alt="我的命定車款">
+      <div class="res-label" style="margin-top:8px;">其他適合你的選擇</div>
+      <div class="alts" id="alts"></div>
+      <button class="btn red" onclick="bookTest()">🚗 我想預約賞車</button>
+      <button class="btn blue" onclick="downloadCard()">💾 下載 Game Boy 卡片</button>
+      <button class="btn ghost" onclick="restart()">↺ 再玩一次</button>
+      <p class="foot">※ 推薦結果僅供參考，實際購車歡迎洽詢 Taiwan TOYOTA 各據點</p>
+    </section>
+
+  </div></div>
+  <div class="controls">
+    <div class="dpad"><i class="h"></i><i class="v"></i></div>
+    <div class="ab"><b>B</b><b>A</b></div>
+    <div class="speaker"><i></i><i></i><i></i></div>
+  </div>
+</div>
+<canvas id="card" width="540" height="720" style="display:none;"></canvas>
+
+<script>
+/* ===== 預約連結 ===== */
+const BOOKING_URL="https://www.toyota.com.tw/crmarketing/2025_DLR_socialmedia/?dealer=D";
+
+/* ===== 側面像素車 ===== */
+function renderSprite(target,sprite,cell){
+  const {data,palette}=sprite,w=data[0].length,h=data.length;
+  const el=document.createElement('div');el.className='sprite';
+  el.style.gridTemplateColumns=`repeat(${w},${cell}px)`;el.style.gridTemplateRows=`repeat(${h},${cell}px)`;el.style.width=(w*cell)+'px';
+  for(const row of data)for(const ch of row){const i=document.createElement('i');const c=palette[ch];if(c)i.style.background=c;el.appendChild(i);}
+  if(typeof target==='string')target=document.getElementById(target);
+  target.innerHTML='';target.appendChild(el);return el;
+}
+const CAR_DATA=["....bbbbbbbb....","...bbggggggbb...","bbbbbbbbbbbbbbll","dddddddddddddddd","..kk......kk....",".kssk....kssk...","..kk......kk...."];
+function carSprite(body,shade){return{palette:{b:body,d:shade,g:'#9fe6ff',k:'#1a1a1a',s:'#cfd6dd',l:'#ffd83d'},data:CAR_DATA};}
+
+/* ===== 車款（11 款）===== */
+const CARS={
+  yarisCross:{name:"YARIS CROSS",tag:"都會跨界小休旅",color:["#f4c430","#c79a18"],desc:"靈巧好停、油電超省，車身小但機能滿分。都會新鮮人的第一台車，穿梭巷弄、停車格通通輕鬆搞定！"},
+  corollaCross:{name:"COROLLA CROSS",tag:"國民神車休旅",color:["#2d9cdb","#1c6fa0"],desc:"油電兼顧省油與空間，安全配備齊全又好開。首購族與小家庭的全能首選，一台車打天下！"},
+  altis:{name:"COROLLA ALTIS",tag:"經典油電房車",color:["#7f8a96","#4f5d6b"],desc:"超省油、零件好保養、妥善率高。務實通勤、精打細算的最佳夥伴，開十年都安心。"},
+  rav4:{name:"RAV4",tag:"全能中型休旅",color:["#EB0A1E","#9e0814"],desc:"空間大、底盤穩、油電有力。上山下海、露營載物、全家出遊全都罩得住，戶外咖的夢幻夥伴。"},
+  camry:{name:"CAMRY",tag:"旗艦質感房車",color:["#34495e","#1f2d3a"],desc:"沉穩大器、乘坐寧靜舒適。商務接待、長輩接送都體面，長途高速更是穩到不行的旗艦之選。"},
+  sienna:{name:"SIENNA",tag:"頂級油電 MPV",color:["#46627f","#2d4258"],desc:"頂級油電大型 MPV，乘坐如頭等艙、滑門進出超方便。大家庭出遊與商務接待最尊榮，舒適與氣派的天花板。"},
+  vios:{name:"VIOS",tag:"經濟實惠房車",color:["#7fb3d5","#4a86b0"],desc:"省油好養、空間夠用的入門房車。小資族與社會新鮮人的第一台，代步、業務、買菜全勝任，CP 值超高！"},
+  townace:{name:"TOWN ACE",tag:"創業好夥伴",color:["#e8eaed","#aab0b6"],desc:"能載貨、能跑業務、省油又耐操。頭家圓夢的第一步，小生意大幫手，CP 值爆表的工作車。"},
+  gr:{name:"GR 性能系列",tag:"純粹駕馭樂趣",color:["#EB0A1E","#8c0612"],desc:"為熱血而生！精準操控、強勁動力，GR Yaris／GR86 帶你體驗最純粹的駕駛快感。週末就是要兜風！"},
+  bz4x:{name:"bZ4X",tag:"純電科技休旅",color:["#00b894","#008f72"],desc:"零排放、滿載智慧科技，安靜又有力。搶先擁抱電動未來，科技嘗鮮咖與環保族的時尚之選。"},
+  hilux:{name:"HILUX",tag:"硬派越野皮卡",color:["#5a6b2f","#3c481f"],desc:"硬派中型皮卡，越野猛、載貨強、底盤耐操。上山下海、工地探險都難不倒，狂野不羈的戶外硬漢首選！"},
+};
+
+/* ===== 10 題（每題 4 選項 → 4 車道）===== */
+const QUESTIONS=[
+  {q:"買車預算大概抓多少？",opts:[
+    {t:"70萬以下",s:{vios:3,yarisCross:2,altis:1,townace:2}},
+    {t:"70~100萬",s:{corollaCross:3,altis:2,yarisCross:1,vios:1,rav4:1}},
+    {t:"100~130萬",s:{rav4:3,camry:1,gr:1,bz4x:1,hilux:2}},
+    {t:"130萬以上",s:{camry:3,sienna:3,bz4x:2,gr:2,hilux:1}}]},
+  {q:"車上最常出現的畫面是？",opts:[
+    {t:"一個人聽歌通勤",s:{gr:2,yarisCross:2,vios:2,altis:1,bz4x:1}},
+    {t:"副駕坐著另一半",s:{corollaCross:2,altis:1,camry:1,gr:1,vios:1}},
+    {t:"後座有小孩座椅",s:{rav4:2,sienna:3,corollaCross:1,vios:1}},
+    {t:"滿載家人朋友",s:{sienna:2,rav4:1,townace:1,hilux:1}}]},
+  {q:"你最常開的路段是？",opts:[
+    {t:"市區走走停停",s:{yarisCross:2,vios:2,corollaCross:1,bz4x:2,altis:1}},
+    {t:"高速公路長征",s:{camry:3,altis:2,sienna:1,rav4:1}},
+    {t:"蜿蜒山路郊區",s:{rav4:3,hilux:3,gr:1}},
+    {t:"什麼路都會跑",s:{corollaCross:2,rav4:1,yarisCross:1,altis:1}}]},
+  {q:"回到家，車都停在哪？",opts:[
+    {t:"狹窄巷弄",s:{yarisCross:3,vios:2,altis:1}},
+    {t:"路邊停車格",s:{corollaCross:2,altis:2,vios:1,yarisCross:1}},
+    {t:"自家車庫",s:{rav4:2,camry:1,gr:1,hilux:1}},
+    {t:"大型停車場",s:{sienna:2,camry:2,townace:1,hilux:1}}]},
+  {q:"看車時，目光先飄向？",opts:[
+    {t:"油耗與保養",s:{altis:3,corollaCross:2,vios:2,yarisCross:1}},
+    {t:"後廂與空間",s:{rav4:2,sienna:2,townace:1,hilux:2}},
+    {t:"中控大螢幕",s:{bz4x:3,corollaCross:1,camry:1,sienna:1}},
+    {t:"引擎與操控",s:{gr:4,rav4:1,hilux:1}}]},
+  {q:"難得的休假日，你會？",opts:[
+    {t:"住家附近放空",s:{yarisCross:2,vios:2,altis:2}},
+    {t:"全家出遊踏青",s:{rav4:2,sienna:3,corollaCross:1}},
+    {t:"露營登山玩戶外",s:{rav4:2,hilux:3,corollaCross:1,gr:1}},
+    {t:"揪車友山道兜風",s:{gr:4}}]},
+  {q:"塞車時的你，通常是？",opts:[
+    {t:"佛系慢慢開省油",s:{altis:3,corollaCross:2,vios:1,bz4x:1}},
+    {t:"求平穩不搶快",s:{camry:3,sienna:2,rav4:1}},
+    {t:"靈活找縫隙鑽",s:{yarisCross:3,vios:2,corollaCross:1}},
+    {t:"一有空檔就想衝",s:{gr:4,hilux:1,rav4:1}}]},
+  {q:"路邊哪種車讓你多看一眼？",opts:[
+    {t:"小巧可愛的車",s:{yarisCross:3,vios:2}},
+    {t:"俐落有型都會車",s:{corollaCross:2,altis:2,camry:1,bz4x:1,vios:1}},
+    {t:"高大威猛休旅",s:{rav4:3,sienna:2,hilux:2}},
+    {t:"帥氣性能跑格",s:{gr:4,camry:1}}]},
+  {q:"這台車對你比較像？",opts:[
+    {t:"偶爾代步的工具",s:{yarisCross:2,vios:2,altis:1}},
+    {t:"每天通勤的夥伴",s:{altis:2,corollaCross:2,vios:1,bz4x:2}},
+    {t:"長途旅行的良伴",s:{camry:3,sienna:1,rav4:1,altis:1}},
+    {t:"工作賺錢的戰友",s:{townace:4,hilux:3,rav4:1}}]},
+  {q:"理想有車生活，最重要的是？",opts:[
+    {t:"省下油錢做更多事",s:{altis:2,corollaCross:2,vios:2,yarisCross:1}},
+    {t:"家人坐得舒服開心",s:{sienna:2,rav4:1,camry:1,corollaCross:1}},
+    {t:"出門有面子有質感",s:{camry:3,sienna:2,bz4x:1}},
+    {t:"能帶我去任何地方",s:{hilux:2,rav4:2,gr:1,corollaCross:1}}]},
+];
+const GATE_COLORS=['#e74c3c','#2d9cdb','#27ae60','#f5a623'];
+
+/* ===== 場景 ===== */
+const SCENES={
+  city:    {skyA:'#3b4a66',skyB:'#8294b8',grass:'#3a6b35',road:'#3b3f46',decor:'building'},
+  mountain:{skyA:'#5fa8e0',skyB:'#cdeeff',grass:'#3f8a3a',road:'#41454c',decor:'mountain'},
+  country: {skyA:'#74c2ff',skyB:'#e8f7d6',grass:'#4ca33a',road:'#43474e',decor:'tree'},
+  sea:     {skyA:'#46b4e0',skyB:'#bfeeff',grass:'#e3d29a',road:'#4a4e55',decor:'cloud',sea:true},
+  sunset:  {skyA:'#ff7e5f',skyB:'#ffd194',grass:'#5a4a6a',road:'#3a3550',decor:'building'},
+};
+const SCENE_KEYS=Object.keys(SCENES);
+
+/* ===== 工具 ===== */
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
+let actx;
+function beep(f=440,d=0.06,t='square',v=0.04){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+  const o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(actx.destination);
+  g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+d);o.start();o.stop(actx.currentTime+d);}catch(e){}}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function hex(c){return[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];}
+function lerpC(a,b,t){const A=hex(a),B=hex(b);return`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`;}
+function shuffle(n){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function pickScenes(n){const k=[...SCENE_KEYS];for(let i=k.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[k[i],k[j]]=[k[j],k[i]];}return k.slice(0,n);}
+
+/* ===== 畫布 ===== */
+const W=360,H=320, roadTop=64, roadBot=292, LANES=4;
+const laneH=(roadBot-roadTop)/LANES;
+const laneY=i=>roadTop+(i+0.5)*laneH;
+const X_MIN=46, X_MAX=250;
+const cvs=document.getElementById('game'),ctx=cvs.getContext('2d');
+let dpr=1;
+function fitCanvas(){dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));cvs.width=W*dpr;cvs.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;}
+fitCanvas();
+
+let G=null;
+function newGame(){
+  const scores={};for(const k in CARS)scores[k]=0;
+  return{scores,lane:1,carY:laneY(1),carX:90,
+    leftHeld:false,rightHeld:false,dragging:false,dragX:90,
+    traveled:0,speed:1.05,scroll:0,
+    gates:[],coins:[],cones:[],decor:[],
+    gatesSpawned:0,gatesDecided:0,nextGateDist:240,gateGap:430,
+    nextCoinDist:150,nextDecorDist:60,
+    coinCount:0,hits:0,startT:0,
+    scenesRun:pickScenes(4),curScene:0,sceneFade:1,
+    finished:false,last:null,raf:0,flash:0,shake:0,tipHidden:false};
+}
+function curSceneObj(){return SCENES[G.scenesRun[G.curScene]];}
+
+/* ===== 開始 ===== */
+function startGame(){beep(660,0.08);fitCanvas();G=newGame();G.startT=performance.now();
+  const tip=document.getElementById('tip');tip.style.opacity='1';
+  show('play');setPrompt();loop();}
+function setPrompt(){const el=document.getElementById('ghud');
+  const qi=Math.min(G.gatesDecided,QUESTIONS.length-1);
+  el.innerHTML=`路口 <b>${Math.min(G.gatesDecided+1,10)}/10</b> ・ ${QUESTIONS[qi].q}`;}
+
+/* ===== 生成 ===== */
+function spawnGate(){const qi=G.gatesSpawned;
+  // 只清掉「剛從右側進場、會貼著路口」的物件（最右側一小條），不動畫面中央玩家正在互動的物件
+  G.cones=G.cones.filter(o=>o.x<320);G.coins=G.coins.filter(c=>c.x<320);
+  G.gates.push({x:W+12,w:92,qi,order:shuffle(4),decided:false,chosen:-1});G.gatesSpawned++;setPrompt();}
+function spawnCoin(){const l=Math.random()*LANES|0;G.coins.push({x:W+10,lane:l,got:false});}
+function spawnCone(){const l=Math.random()*LANES|0;G.cones.push({x:W+10,lane:l,hit:false});}
+function spawnDecor(){const sc=curSceneObj(),ty=sc.decor;let d={x:W+20,type:ty};
+  if(ty==='building'){d.w=20+(Math.random()*26|0);d.h=18+(Math.random()*34|0);d.c='#26303f';}
+  else if(ty==='mountain'){d.w=60+(Math.random()*50|0);d.h=30+(Math.random()*22|0);}
+  else if(ty==='tree'){d.h=14+(Math.random()*10|0);}
+  else if(ty==='cloud'){d.y=10+(Math.random()*28|0);d.w=22+(Math.random()*18|0);}
+  G.decor.push(d);}
+
+/* ===== 更新 ===== */
+function update(){const g=G;
+  g.traveled+=g.speed;g.scroll=(g.scroll+g.speed)%40;
+  if(g.speed<1.5)g.speed+=0.00035;
+
+  const targetScene=Math.min(3,Math.floor(g.gatesDecided/3));
+  if(targetScene!==g.curScene){g.curScene=targetScene;g.sceneFade=0;}
+  if(g.sceneFade<1)g.sceneFade=Math.min(1,g.sceneFade+0.02);
+
+  if(g.gatesSpawned<QUESTIONS.length&&g.traveled>=g.nextGateDist){spawnGate();g.nextGateDist+=g.gateGap;}
+  // 前方有路口、或路口即將出現時，暫停生成金幣/三角錐 → 路口跑道乾淨，且不會整批清除畫面上的物件
+  const gateAhead=g.gates.some(ga=>!ga.decided&&ga.x>g.carX-30);
+  const gateSoon=g.gatesSpawned<QUESTIONS.length&&(g.nextGateDist-g.traveled)<150;
+  if(g.traveled>=g.nextCoinDist){if(!gateAhead&&!gateSoon){Math.random()<0.74?spawnCoin():spawnCone();}g.nextCoinDist+=64+Math.random()*70;}
+  if(g.traveled>=g.nextDecorDist){spawnDecor();g.nextDecorDist+=50+Math.random()*70;}
+
+  // 水平：自由平滑前後
+  if(g.dragging){g.carX+=(g.dragX-g.carX)*0.32;}
+  else{if(g.rightHeld)g.carX+=3.0;if(g.leftHeld)g.carX-=3.0;}
+  g.carX=clamp(g.carX,X_MIN,X_MAX);
+  // 垂直：四車道平滑緩動
+  g.carY+=(laneY(g.lane)-g.carY)*0.3;
+
+  for(const ga of g.gates){ga.x-=g.speed;
+    if(!ga.decided&&ga.x+ga.w/2<=g.carX){
+      ga.decided=true;ga.chosen=g.lane;g.gatesDecided++;
+      const opt=QUESTIONS[ga.qi].opts[ga.order[g.lane]];
+      for(const k in opt.s)g.scores[k]+=opt.s[k];
+      g.flash=10;beep(720,0.05);setTimeout(()=>beep(960,0.06),60);setPrompt();
+      if(g.gatesDecided>=QUESTIONS.length)g.last=ga;}}
+  g.gates=g.gates.filter(ga=>{if(ga.x<-ga.w-6){if(ga===g.last)finish();return false;}return true;});
+
+  for(const c of g.coins){c.x-=g.speed;const cy=laneY(c.lane);
+    if(!c.got&&Math.abs(c.x-g.carX)<18&&Math.abs(cy-g.carY)<16){c.got=true;g.coinCount++;beep(1180,0.05,'triangle',0.05);}}
+  g.coins=g.coins.filter(c=>!c.got&&c.x>-16);
+  for(const o of g.cones){o.x-=g.speed;const oy=laneY(o.lane);
+    if(!o.hit&&Math.abs(o.x-g.carX)<16&&Math.abs(oy-g.carY)<15){o.hit=true;g.hits++;g.coinCount=Math.max(0,g.coinCount-2);
+      g.shake=16;beep(120,0.16,'sawtooth',0.06);}}
+  g.cones=g.cones.filter(o=>!o.hit&&o.x>-16);
+
+  for(const d of g.decor)d.x-=g.speed*0.55;
+  g.decor=g.decor.filter(d=>d.x>-90);
+
+  if(g.flash>0)g.flash--;
+  if(g.shake>0)g.shake-=0.9;
+
+  if(!g.tipHidden&&g.traveled>150){g.tipHidden=true;document.getElementById('tip').style.opacity='0';}
+}
+
+/* ===== 繪圖 ===== */
+function px(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x|0,y|0,w,h);}
+function drawCarTop(cx,cy,body,shade){
+  px(cx-17,cy-13,34,26,'#0006');
+  px(cx-16,cy-11,32,22,shade);px(cx-14,cy-9,28,18,body);
+  px(cx+2,cy-7,9,14,'#9fe6ff');px(cx-9,cy-6,6,12,'#bfeaff');
+  px(cx-11,cy-15,7,4,'#141414');px(cx+5,cy-15,7,4,'#141414');
+  px(cx-11,cy+11,7,4,'#141414');px(cx+5,cy+11,7,4,'#141414');
+  px(cx+14,cy-8,2,4,'#ffe07a');px(cx+14,cy+4,2,4,'#ffe07a');
+}
+function drawDecor(d){const horizon=roadTop;
+  if(d.type==='building'){px(d.x,horizon-d.h,d.w,d.h,d.c);
+    ctx.fillStyle='#ffd83d';for(let yy=horizon-d.h+4;yy<horizon-4;yy+=7)for(let xx=d.x+3;xx<d.x+d.w-3;xx+=7)ctx.fillRect(xx,yy,3,3);}
+  else if(d.type==='mountain'){ctx.fillStyle='#5f7a4a';ctx.beginPath();ctx.moveTo(d.x,horizon);ctx.lineTo(d.x+d.w/2,horizon-d.h);ctx.lineTo(d.x+d.w,horizon);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#eaffe0';ctx.beginPath();ctx.moveTo(d.x+d.w/2-6,horizon-d.h+8);ctx.lineTo(d.x+d.w/2,horizon-d.h);ctx.lineTo(d.x+d.w/2+6,horizon-d.h+8);ctx.closePath();ctx.fill();}
+  else if(d.type==='tree'){px(d.x+3,horizon-d.h,3,d.h,'#6b4a2a');px(d.x,horizon-d.h-8,9,10,'#2e7d32');px(d.x+1,horizon-d.h-13,7,7,'#388e3c');}
+  else if(d.type==='cloud'){px(d.x,d.y,d.w,6,'#ffffff');px(d.x+5,d.y-4,d.w-10,5,'#ffffff');}
+}
+function draw(){const g=G;
+  ctx.save();
+  if(g.shake>0)ctx.translate((Math.random()-0.5)*g.shake,(Math.random()-0.5)*g.shake);
+  const prev=SCENES[g.scenesRun[Math.max(0,g.curScene-1)]],cur=curSceneObj(),f=g.sceneFade;
+  const skyA=lerpC(prev.skyA,cur.skyA,f),skyB=lerpC(prev.skyB,cur.skyB,f);
+  const grd=ctx.createLinearGradient(0,0,0,roadTop);grd.addColorStop(0,skyA);grd.addColorStop(1,skyB);
+  ctx.fillStyle=grd;ctx.fillRect(-20,0,W+40,roadTop);
+  if(cur.sea&&f>0.4){px(-20,roadTop-16,W+40,16,'#2e90c8');ctx.fillStyle='#bfeeff';for(let x=-g.scroll;x<W;x+=18)ctx.fillRect(x,roadTop-10,8,2);}
+  for(const d of g.decor)drawDecor(d);
+  const grass=lerpC(prev.grass,cur.grass,f);
+  px(-20,roadTop,W+40,6,grass);px(-20,roadBot,W+40,H-roadBot+4,grass);
+  const road=lerpC(prev.road,cur.road,f);
+  px(-20,roadTop+6,W+40,roadBot-roadTop-6,road);
+  px(0,roadTop+3,W,3,'#dfe6e9');px(0,roadBot-3,W,3,'#dfe6e9');
+  ctx.fillStyle='#cdd2d8';
+  for(let l=1;l<LANES;l++){const ly=roadTop+l*laneH;for(let x=-g.scroll;x<W;x+=40)ctx.fillRect(x,ly-2,22,4);}
+
+  // 目前所在車道（淡色高亮，提示你會選哪一排）
+  const bi=clamp(Math.floor((g.carY-roadTop)/laneH),0,LANES-1);
+  ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fillRect(0,roadTop+bi*laneH,W,laneH);
+
+  // 金幣
+  for(const c of g.coins){const cy=laneY(c.lane);
+    px(c.x-9,cy-9,18,18,'#b8860b');px(c.x-8,cy-8,16,16,'#f1c40f');px(c.x-4,cy-6,5,12,'#fff6cc');px(c.x-8,cy-8,16,3,'#ffe07a');
+    ctx.fillStyle='#9a6f00';ctx.font='bold 11px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('$',c.x,cy+1);}
+  // 三角錐
+  for(const o of g.cones){const cy=laneY(o.lane);
+    px(o.x-3,cy-12,6,5,'#e8590c');px(o.x-6,cy-7,12,5,'#f76707');px(o.x-9,cy-2,18,6,'#f76707');
+    px(o.x-6,cy-5,12,2,'#fff');px(o.x-8,cy-1,16,2,'#fff');px(o.x-11,cy+4,22,3,'#2b2b2b');}
+
+  // 路口牆
+  for(const ga of g.gates){const q=QUESTIONS[ga.qi];
+    for(let i=0;i<LANES;i++){const ry=roadTop+i*laneH,oi=ga.order[i];
+      let col=GATE_COLORS[i%4];if(ga.decided)col=(i===ga.chosen)?col:'#2b2f35';
+      px(ga.x,ry+1,ga.w,laneH-2,col);px(ga.x,ry+1,4,laneH-2,'#0008');px(ga.x+ga.w-4,ry+1,4,laneH-2,'#0008');
+      ctx.fillStyle=(ga.decided&&i!==ga.chosen)?'#777':'#fff';
+      ctx.font='800 15px "Noto Sans TC","Microsoft JhengHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.lineWidth=3;ctx.strokeStyle='#0009';
+      ctx.strokeText(q.opts[oi].t,ga.x+ga.w/2,ry+laneH/2);ctx.fillText(q.opts[oi].t,ga.x+ga.w/2,ry+laneH/2);}
+    if(!ga.decided){ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.strokeRect(ga.x+2,roadTop+bi*laneH+2,ga.w-4,laneH-4);}}
+
+  drawCarTop(g.carX,g.carY,'#EB0A1E','#9e0814');
+  if(g.flash>0){ctx.fillStyle=`rgba(255,255,255,${g.flash/22})`;ctx.fillRect(-20,0,W+40,H);}
+
+  ctx.font='10px "Press Start 2P",monospace';ctx.textBaseline='top';ctx.lineWidth=3;ctx.strokeStyle='#000';
+  ctx.textAlign='left';const t1=`COIN ${String(g.coinCount).padStart(2,'0')}`;ctx.strokeText(t1,8,6);ctx.fillStyle='#ffe07a';ctx.fillText(t1,8,6);
+  ctx.textAlign='right';const t2=`GATE ${g.gatesDecided}/10`;ctx.strokeText(t2,W-8,6);ctx.fillStyle='#9bbc0f';ctx.fillText(t2,W-8,6);
+  ctx.restore();
+}
+function loop(){if(!G||G.finished)return;update();draw();G.raf=requestAnimationFrame(loop);}
+
+/* ===== 中二稱號 ===== */
+function nickname(winner,coins,hits){
+  let pre;
+  if(hits===0)pre='零失誤';else if(hits>=6)pre='橫衝直撞';
+  else if(coins>=18)pre='黃金滿載';else if(coins<=4)pre='佛系隨緣';else pre='風馳電掣';
+  const suf={gr:'秋名山車神',rav4:'山海征服者',camry:'尊爵掌門人',sienna:'移動城堡主',
+    yarisCross:'巷弄遊俠',vios:'省油快遞俠',altis:'省油老賢者',corollaCross:'國民大英雄',
+    bz4x:'未來旅人',townace:'頭家活傳奇',hilux:'荒野硬漢王'}[winner];
+  return pre+'の'+suf;
+}
+
+/* ===== Game Boy 分享卡片 ===== */
+const cardCanvas=document.getElementById('card'),cctx=cardCanvas.getContext('2d');
+function rr(x,y,w,h,r,c){cctx.fillStyle=c;cctx.beginPath();cctx.moveTo(x+r,y);cctx.arcTo(x+w,y,x+w,y+h,r);
+  cctx.arcTo(x+w,y+h,x,y+h,r);cctx.arcTo(x,y+h,x,y,r);cctx.arcTo(x,y,x+w,y,r);cctx.closePath();cctx.fill();}
+function circ(x,y,r,c){cctx.fillStyle=c;cctx.beginPath();cctx.arc(x,y,r,0,7);cctx.fill();}
+function drawCarBig(cx,cy,scale,body,shade){const pal={b:body,d:shade,g:'#9fe6ff',k:'#1a1a1a',s:'#cfd6dd',l:'#ffd83d'};
+  const rows=CAR_DATA,w=rows[0].length,h=rows.length,ox=cx-w*scale/2,oy=cy-h*scale/2;
+  for(let r=0;r<h;r++)for(let c=0;c<w;c++){const ch=rows[r][c];if(pal[ch]){cctx.fillStyle=pal[ch];cctx.fillRect(ox+c*scale,oy+r*scale,scale,scale);}}}
+function wrapText(text,x,y,maxW,lh){let line='';
+  for(const ch of text){const test=line+ch;
+    if(cctx.measureText(test).width>maxW&&line){cctx.fillText(line,x,y);line=ch;y+=lh;}else line=test;}
+  if(line)cctx.fillText(line,x,y);return y;}
+function buildCard(winner,car,match,coins,hits,nick){
+  const w=540,h=720;
+  cctx.clearRect(0,0,w,h);
+  rect2(0,0,w,h,'#1c1e22');
+  // ===== Game Boy 邊框（只是外框，內容才是主角）=====
+  rr(8,8,w-16,h-16,30,'#c8c6c1');
+  // 右下招牌大圓角
+  cctx.fillStyle='#c8c6c1';cctx.beginPath();cctx.moveTo(w-8,h-84);cctx.arcTo(w-8,h-8,w-84,h-8,64);cctx.lineTo(w-8,h-8);cctx.closePath();cctx.fill();
+  // 上方兩道凹槽
+  rect2(34,28,w-68,3,'#b0aea9');rect2(34,35,w-68,3,'#b0aea9');
+  // POWER 燈
+  circ(40,80,6,'#9b2d2d');circ(40,80,3.5,'#e74c3c');
+  cctx.fillStyle='#7a7d82';cctx.font='600 10px "Noto Sans TC",sans-serif';cctx.textAlign='left';cctx.fillText('POWER',52,84);
+  // 螢幕外框（深灰 bezel）
+  const bx=26,by=56,bw=w-52,bh=h-150;
+  rr(bx,by,bw,bh,16,'#56585c');
+  rr(bx+12,by+12,bw-24,bh-24,8,'#2f4a2c');
+  const sx=bx+18,sy=by+18,sw=bw-36,sh=bh-36;
+  rect2(sx,sy,sw,sh,'#0f1c10');
+  cctx.fillStyle='rgba(0,0,0,0.16)';for(let y=sy;y<sy+sh;y+=4)cctx.fillRect(sx,y,sw,2);
+
+  // ===== 螢幕內容（主角）=====
+  const cx=w/2;cctx.textAlign='center';
+  rr(sx+30,sy+16,sw-60,42,7,'#ffd83d');rr(sx+30,sy+16,sw-60,6,7,'#ffe9a0');
+  cctx.fillStyle='#7a3b00';cctx.font='900 12px "Noto Sans TC",sans-serif';cctx.fillText('★ 你 的 駕 駛 稱 號 ★',cx,sy+32);
+  cctx.fillStyle='#1a1207';cctx.font='900 23px "Noto Sans TC",sans-serif';cctx.fillText(nick,cx,sy+53);
+  // 車
+  drawCarBig(cx,sy+124,14,car.color[0],car.color[1]);
+  // 車名 / 標語
+  cctx.fillStyle='#9bbc0f';cctx.font='900 36px "Noto Sans TC",sans-serif';cctx.fillText(car.name,cx,sy+204);
+  cctx.fillStyle='#cfe3a0';cctx.font='600 16px "Noto Sans TC",sans-serif';cctx.fillText('「'+car.tag+'」',cx,sy+228);
+  // 契合度
+  rr(cx-80,sy+242,160,36,8,'#27412a');cctx.fillStyle='#ffe07a';cctx.font='bold 19px "Press Start 2P",monospace';cctx.fillText(match+'%',cx,sy+260);
+  cctx.fillStyle='#9ab87a';cctx.font='600 12px "Noto Sans TC",sans-serif';cctx.fillText('命定契合度',cx,sy+294);
+  // 兩宮格（金幣 / 撞錐）
+  const stats=[['🪙 金幣',coins],['🚧 撞錐',hits]];
+  const pw=sw*0.34,gp=(sw-pw*2)/3,top=sy+308;
+  stats.forEach((st,i)=>{const x=sx+gp+i*(pw+gp);rr(x,top,pw,50,6,'#13261a');rect2(x,top,pw,3,'#2c4a2e');
+    cctx.fillStyle='#9ab87a';cctx.font='600 13px "Noto Sans TC",sans-serif';cctx.fillText(st[0],x+pw/2,top+19);
+    cctx.fillStyle='#eaffd6';cctx.font='900 22px "Noto Sans TC",sans-serif';cctx.fillText(st[1],x+pw/2,top+42);});
+  // 車款介紹（自動換行）
+  cctx.fillStyle='#cde3b0';cctx.font='600 15px "Noto Sans TC",sans-serif';
+  wrapText(car.desc,cx,sy+400,sw-54,22);
+  // 螢幕內 CTA
+  cctx.fillStyle='#7d9a5f';cctx.font='700 14px "Noto Sans TC",sans-serif';cctx.fillText('你的命定車款是？快來測測看！',cx,sy+sh-16);
+
+  // ===== 邊框下方品牌帶（小，點綴）=====
+  cctx.textAlign='left';
+  cctx.fillStyle='#EB0A1E';cctx.font='italic 900 27px "Noto Sans TC",sans-serif';cctx.fillText('TOYOTA',40,h-42);
+  cctx.fillStyle='#5a5e63';cctx.font='900 16px "Press Start 2P",monospace';cctx.fillText('CAR QUEST',186,h-44);
+  cctx.fillStyle='#7a7d82';cctx.font='600 12px "Noto Sans TC",sans-serif';cctx.fillText('公路選車之旅 ・ Taiwan TOYOTA',188,h-26);
+  // 右下小喇叭斜紋
+  cctx.save();cctx.translate(w-116,h-70);cctx.rotate(-0.42);cctx.fillStyle='#b3b1ac';
+  for(let i=0;i<5;i++)cctx.fillRect(i*9,0,4,42);cctx.restore();
+  return cardCanvas.toDataURL('image/png');
+}
+function rect2(x,y,w,h,c){cctx.fillStyle=c;cctx.fillRect(x,y,w,h);}
+
+/* ===== 結束 ===== */
+function finish(){if(G.finished)return;G.finished=true;cancelAnimationFrame(G.raf);
+  const s=G.scores,ranked=Object.keys(s).sort((a,b)=>s[b]-s[a]),winner=ranked[0],car=CARS[winner];
+  const match=Math.min(98,68+Math.round(s[winner]*1.4));
+  const nick=nickname(winner,G.coinCount,G.hits);
+  const altBox=document.getElementById('alts');altBox.innerHTML='';
+  ranked.slice(1,3).forEach(k=>{const d=document.createElement('div');d.className='alt';
+    d.innerHTML=`<span>也很適合</span><b>${CARS[k].name}</b>`;altBox.appendChild(d);});
+  const render=()=>{document.getElementById('cardImg').src=buildCard(winner,car,match,G.coinCount,G.hits,nick);};
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render);else render();
+  show('result');
+  beep(660,0.08);setTimeout(()=>beep(880,0.08),90);setTimeout(()=>beep(1040,0.16),190);
+}
+function cellFor(b){return Math.max(2,Math.round(b*Math.min(1,window.innerWidth/440)));}
+function restart(){beep(440,0.06);renderSprite('startSprite',carSprite('#EB0A1E','#9e0814'),cellFor(9));show('start');}
+function bookTest(){beep(660,0.1);window.open(BOOKING_URL,'_blank');}
+function downloadCard(){const a=document.createElement('a');a.href=document.getElementById('cardImg').src;a.download='我的命定車款.png';a.click();}
+
+/* ===== 輸入 ===== */
+function vMove(d){if(!G||G.finished)return;const n=clamp(G.lane+d,0,LANES-1);if(n!==G.lane){G.lane=n;beep(440,0.03,'square',0.03);}}
+addEventListener('keydown',e=>{if(!G||G.finished)return;const k=e.key;
+  if(k==='ArrowUp'||k==='w'||k==='W'){if(!e.repeat)vMove(-1);e.preventDefault();}
+  else if(k==='ArrowDown'||k==='s'||k==='S'){if(!e.repeat)vMove(1);e.preventDefault();}
+  else if(k==='ArrowLeft'||k==='a'||k==='A'){G.leftHeld=true;e.preventDefault();}
+  else if(k==='ArrowRight'||k==='d'||k==='D'){G.rightHeld=true;e.preventDefault();}});
+addEventListener('keyup',e=>{if(!G)return;const k=e.key;
+  if(k==='ArrowLeft'||k==='a'||k==='A')G.leftHeld=false;
+  if(k==='ArrowRight'||k==='d'||k==='D')G.rightHeld=false;});
+function ptr(e){const r=cvs.getBoundingClientRect();const t=e.touches?e.touches[0]:e;
+  return{x:(t.clientX-r.left)/r.width*W,y:(t.clientY-r.top)/r.height*H};}
+function dragStart(e){if(!G||G.finished)return;const p=ptr(e);G.dragging=true;G.dragX=clamp(p.x,X_MIN,X_MAX);G.lane=clamp(Math.floor((p.y-roadTop)/laneH),0,LANES-1);e.preventDefault&&e.preventDefault();}
+function dragMove(e){if(!G||G.finished||!G.dragging)return;const p=ptr(e);G.dragX=clamp(p.x,X_MIN,X_MAX);G.lane=clamp(Math.floor((p.y-roadTop)/laneH),0,LANES-1);e.preventDefault&&e.preventDefault();}
+function dragEnd(){if(G)G.dragging=false;}
+cvs.addEventListener('mousedown',dragStart);addEventListener('mousemove',dragMove);addEventListener('mouseup',dragEnd);
+cvs.addEventListener('touchstart',dragStart,{passive:false});cvs.addEventListener('touchmove',dragMove,{passive:false});cvs.addEventListener('touchend',dragEnd);
+function tapBtn(id,fn){const b=document.getElementById(id);const on=e=>{fn();e.preventDefault();};
+  b.addEventListener('mousedown',on);b.addEventListener('touchstart',on,{passive:false});}
+function holdBtn(id,prop){const b=document.getElementById(id);
+  const on=e=>{if(G)G[prop]=true;e.preventDefault();};const off=()=>{if(G)G[prop]=false;};
+  b.addEventListener('mousedown',on);b.addEventListener('touchstart',on,{passive:false});
+  b.addEventListener('mouseup',off);b.addEventListener('mouseleave',off);b.addEventListener('touchend',off);}
+tapBtn('btnUp',()=>vMove(-1));tapBtn('btnDown',()=>vMove(1));
+holdBtn('btnBack','leftHeld');holdBtn('btnFwd','rightHeld');
+addEventListener('resize',()=>{fitCanvas();if(document.getElementById('start').classList.contains('active'))renderSprite('startSprite',carSprite('#EB0A1E','#9e0814'),cellFor(9));});
+
+renderSprite('startSprite',carSprite('#EB0A1E','#9e0814'),cellFor(9));
+</script>
+</body>
+</html>
