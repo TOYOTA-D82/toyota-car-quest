@@ -61,7 +61,7 @@
   .ghud b{color:#ffe07a;}
   .ghud .qlabel{background:#ffe07a;color:#1a1207;font-size:11px;font-weight:900;border-radius:4px;padding:2px 6px;margin-right:7px;}
   .gamewrap{position:relative;}
-  canvas#game{width:100%;height:auto;aspect-ratio:360/320;image-rendering:pixelated;background:#20242a;
+  canvas#game{width:100%;height:auto;aspect-ratio:360/392;image-rendering:pixelated;background:#20242a;
     border-radius:4px;display:block;touch-action:none;border:2px solid #0a160b;}
   /* 進場提示 */
   #tip{position:absolute;left:0;right:0;bottom:10px;text-align:center;pointer-events:none;transition:opacity .5s;}
@@ -136,7 +136,7 @@
     <section class="view" id="play">
       <div class="ghud" id="ghud">準備出發！</div>
       <div class="gamewrap">
-        <canvas id="game" width="360" height="320"></canvas>
+        <canvas id="game" width="360" height="392"></canvas>
         <div id="tip"><span>用下方十字鍵操作，或直接拖曳小車！</span></div>
       </div>
     </section>
@@ -279,7 +279,7 @@ function shuffle(n){const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){const j=
 function pickScenes(n){const k=[...SCENE_KEYS];for(let i=k.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[k[i],k[j]]=[k[j],k[i]];}return k.slice(0,n);}
 
 /* ===== 畫布 ===== */
-const W=360,H=320, roadTop=64, roadBot=292, LANES=4;
+const W=360,H=392, roadTop=66, roadBot=364, LANES=4;
 const laneH=(roadBot-roadTop)/LANES;
 const laneY=i=>roadTop+(i+0.5)*laneH;
 const X_MIN=46, X_MAX=250;
@@ -349,12 +349,6 @@ function update(dt){const g=G;
     g.nextConeDist+=140+Math.random()*90;
   }
   if(g.traveled>=g.nextDecorDist){spawnDecor();g.nextDecorDist+=50+Math.random()*70;}
-
-  // 題目橫幅：路口生成前 330 距離就提早顯示；路口進場(x<330)後淡出 → 不擋路牌、方便讀答案
-  let bTarget=0;const up=g.gates.find(ga=>!ga.decided);
-  if(up){if(up.x>330){bTarget=1;g.bannerText=QUESTIONS[up.qi].q;}}
-  else if(qLeft&&untilGate<330){bTarget=1;g.bannerText=QUESTIONS[g.gatesSpawned].q;}
-  g.bannerAlpha+=(bTarget-g.bannerAlpha)*Math.min(1,0.22*dt);
 
   // 水平：自由平滑前後
   if(g.dragging){g.carX+=(g.dragX-g.carX)*Math.min(1,0.32*dt);}
@@ -460,21 +454,6 @@ function draw(){const g=G;
 
   drawCarTop(g.carX,g.carY,'#EB0A1E','#9e0814');
   if(g.flash>0){ctx.fillStyle=`rgba(255,255,255,${g.flash/22})`;ctx.fillRect(-20,0,W+40,H);}
-
-  // 新題目橫幅（淡入→停留→淡出，顯示在畫面上方路面處）
-  if(g.bannerAlpha>0.02){
-    const a=clamp(g.bannerAlpha,0,1);
-    ctx.save();
-    ctx.fillStyle=`rgba(5,20,8,${a*0.9})`;ctx.fillRect(0,roadTop,W,64);
-    ctx.fillStyle=`rgba(27,52,22,${a*0.96})`;ctx.fillRect(6,roadTop+6,W-12,52);
-    ctx.strokeStyle=`rgba(255,220,50,${a})`;ctx.lineWidth=2.5;ctx.strokeRect(6,roadTop+6,W-12,52);
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle=`rgba(255,220,50,${a*0.9})`;ctx.font='700 9px "Press Start 2P",monospace';
-    ctx.fillText('─◆─ 問 題 來 了 ─◆─',W/2,roadTop+19);
-    ctx.fillStyle=`rgba(234,255,214,${a})`;ctx.font='900 22px "Noto Sans TC","Microsoft JhengHei",sans-serif';
-    ctx.fillText(g.bannerText,W/2,roadTop+43);
-    ctx.restore();
-  }
 
   ctx.font='10px "Press Start 2P",monospace';ctx.textBaseline='top';ctx.lineWidth=3;ctx.strokeStyle='#000';
   ctx.textAlign='left';const t1=`COIN ${String(g.coinCount).padStart(2,'0')}`;ctx.strokeText(t1,8,6);ctx.fillStyle='#ffe07a';ctx.fillText(t1,8,6);
