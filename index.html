@@ -296,7 +296,7 @@ function newGame(){
     traveled:0,speed:1.05,scroll:0,
     gates:[],coins:[],cones:[],decor:[],
     gatesSpawned:0,gatesDecided:0,nextGateDist:300,gateGap:680,
-    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,qFlash:0,qFlashText:'',
+    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,qFlash:0,qFlashText:'',qAnnouncedFor:-1,
     coinCount:0,hits:0,startT:0,
     scenesRun:pickScenes(4),curScene:0,sceneFade:1,
     finished:false,last:null,raf:0,flash:0,shake:0,tipHidden:false};
@@ -315,7 +315,6 @@ function setPrompt(){const el=document.getElementById('ghud');
 /* ===== 生成 ===== */
 function spawnGate(){const qi=G.gatesSpawned;
   G.gates.push({x:W+12,w:118,qi,order:shuffle(4),decided:false,chosen:-1});
-  G.qFlash=150;G.qFlashText=QUESTIONS[qi].q;
   G.gatesSpawned++;setPrompt();}
 function spawnCoin(){const l=Math.random()*LANES|0;G.coins.push({x:W+10,lane:l,got:false});}
 function spawnCone(){const l=Math.random()*LANES|0;G.cones.push({x:W+10,lane:l,hit:false});}
@@ -336,6 +335,10 @@ function update(){const g=G;
   if(targetScene!==g.curScene){g.curScene=targetScene;g.sceneFade=0;}
   if(g.sceneFade<1)g.sceneFade=Math.min(1,g.sceneFade+0.02);
 
+  // 提前預告即將到來的題目：路口生成前約 150 距離就先彈出「問題來了」橫幅
+  if(g.gatesSpawned<QUESTIONS.length&&g.qAnnouncedFor<g.gatesSpawned&&g.traveled>=g.nextGateDist-150){
+    g.qFlash=190;g.qFlashText=QUESTIONS[g.gatesSpawned].q;g.qAnnouncedFor=g.gatesSpawned;setPrompt();
+  }
   if(g.gatesSpawned<QUESTIONS.length&&g.traveled>=g.nextGateDist){spawnGate();g.nextGateDist+=g.gateGap;}
   const qLeft=g.gatesSpawned<QUESTIONS.length;
   const untilGate=g.nextGateDist-g.traveled;
@@ -463,7 +466,7 @@ function draw(){const g=G;
   // 新題目橫幅（淡入→停留→淡出，顯示在畫面上方路面處）
   if(g.qFlash>0){
     const f=g.qFlash;
-    let a=f>132?(150-f)/18:f>20?1:f/20;a=clamp(a,0,1);
+    let a=f>172?(190-f)/18:f>20?1:f/20;a=clamp(a,0,1);
     ctx.save();
     ctx.fillStyle=`rgba(5,20,8,${a*0.9})`;ctx.fillRect(0,roadTop,W,64);
     ctx.fillStyle=`rgba(27,52,22,${a*0.96})`;ctx.fillRect(6,roadTop+6,W-12,52);
