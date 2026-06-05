@@ -55,10 +55,11 @@
   .btn.ghost{background:#27412a;color:#cfe3a0;box-shadow:0 4px 0 #14240f,0 5px 0 #000;}
   .btn.blue{background:#2d9cdb;color:#fff;box-shadow:0 4px 0 #1c6fa0,0 5px 0 #000;}
   #play{display:none;}#play.active{display:block;}
-  .ghud{font-family:"Noto Sans TC",sans-serif;font-weight:800;font-size:15px;color:#eaffd6;background:#0a160b;
-    border:2px solid #2c4a2e;border-radius:4px;padding:9px 10px;margin-bottom:8px;text-align:center;line-height:1.4;
-    min-height:40px;display:flex;align-items:center;justify-content:center;}
-  .ghud b{color:var(--pixel-green);}
+  .ghud{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:17px;color:#fff;background:#0a160b;
+    border:3px solid #ffe07a;border-radius:6px;padding:10px 10px;margin-bottom:8px;text-align:center;line-height:1.35;
+    min-height:44px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px #ffe07a33;}
+  .ghud b{color:#ffe07a;}
+  .ghud .qlabel{background:#ffe07a;color:#1a1207;font-size:11px;font-weight:900;border-radius:4px;padding:2px 6px;margin-right:7px;}
   .gamewrap{position:relative;}
   canvas#game{width:100%;height:auto;aspect-ratio:360/320;image-rendering:pixelated;background:#20242a;
     border-radius:4px;display:block;touch-action:none;border:2px solid #0a160b;}
@@ -66,14 +67,6 @@
   #tip{position:absolute;left:0;right:0;bottom:10px;text-align:center;pointer-events:none;transition:opacity .5s;}
   #tip span{font-family:"Noto Sans TC",sans-serif;font-size:12px;font-weight:700;color:#fff;background:#000a;
     padding:6px 12px;border-radius:20px;border:1px solid #ffffff44;}
-  .pad{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px;}
-  .padcluster{display:flex;gap:14px;}
-  .padcol{display:flex;gap:6px;}
-  .padcol .lab{font-family:"Noto Sans TC",sans-serif;font-size:8px;color:#7d9a5f;text-align:center;}
-  .padbtn{width:50px;height:46px;border:none;border-radius:6px;background:#3a3d42;color:#fff;font-size:20px;
-    box-shadow:0 4px 0 #1f2226;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;}
-  .padbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #1f2226;}
-  .hint{font-family:"Noto Sans TC",sans-serif;font-size:9px;color:#7d9a5f;text-align:right;line-height:1.4;}
   .res-label{font-size:8px;color:#cfe3a0;letter-spacing:2px;margin-bottom:4px;}
   #cardImg{width:100%;max-width:300px;image-rendering:auto;border-radius:8px;box-shadow:0 6px 18px #000a;display:block;margin:0 auto;}
   .desc{font-family:"Noto Sans TC",sans-serif;font-size:12px;color:#dff0d8;line-height:1.65;background:#0a160b;
@@ -83,15 +76,27 @@
     font-family:"Noto Sans TC",sans-serif;font-size:10px;color:#cfe3a0;text-align:center;}
   .alt b{display:block;color:#eaffd6;font-size:11px;margin-top:3px;}
   .foot{font-family:"Noto Sans TC",sans-serif;font-size:9px;color:#7d9a5f;margin-top:10px;}
-  .controls{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 6px;}
-  .dpad{position:relative;width:50px;height:50px;}
-  .dpad i{position:absolute;background:#3a3d42;border-radius:3px;box-shadow:inset 0 0 0 2px #2a2c30;}
-  .dpad .h{top:17px;left:0;width:50px;height:16px;}.dpad .v{left:17px;top:0;width:16px;height:50px;}
-  .ab{display:flex;gap:10px;}
-  .ab b{width:24px;height:24px;border-radius:50%;background:var(--toyota-red);
-    box-shadow:inset 0 -3px 0 #00000044,0 2px 2px #0006;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;}
-  .speaker{display:flex;gap:4px;transform:rotate(-20deg);}
+  .controls{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:0 8px;gap:6px;}
+  .dpad{display:grid;grid-template-columns:repeat(3,34px);grid-template-rows:repeat(3,34px);flex:0 0 auto;}
+  .dbtn{border:none;background:#3a3d42;color:#e7eaee;font-size:15px;cursor:pointer;user-select:none;
+    display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 2px #2a2c30;
+    -webkit-user-select:none;touch-action:manipulation;}
+  .dbtn:active{background:var(--toyota-red);color:#fff;}
+  .dbtn.up{grid-area:1/2;border-radius:7px 7px 0 0;}
+  .dbtn.left{grid-area:2/1;border-radius:7px 0 0 7px;}
+  .dbtn.right{grid-area:2/3;border-radius:0 7px 7px 0;}
+  .dbtn.down{grid-area:3/2;border-radius:0 0 7px 7px;}
+  .dcenter{grid-area:2/2;background:#34373c;box-shadow:inset 0 0 0 2px #2a2c30;}
+  .cmid{display:flex;flex-direction:column;gap:5px;flex:1;align-items:center;}
+  .ctag{font-family:"Noto Sans TC",sans-serif;font-size:9.5px;font-weight:700;color:#5a5f64;
+    background:#dfe1e4;border-radius:4px;padding:4px 8px;white-space:nowrap;box-shadow:inset 0 0 0 1px #c4c8cd;}
+  .ab{display:flex;gap:9px;flex:0 0 auto;}
+  .ab b{width:26px;height:26px;border-radius:50%;background:var(--toyota-red);
+    box-shadow:inset 0 -3px 0 #00000044,0 2px 2px #0006;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;}
+  .speaker{display:flex;gap:4px;transform:rotate(-20deg);flex:0 0 auto;}
   .speaker i{width:4px;height:18px;background:#aab0b6;border-radius:2px;}
+  @keyframes hudPulse{0%,100%{border-color:#2c4a2e;box-shadow:none;}40%{border-color:#ffe07a;box-shadow:0 0 14px #ffe07a99;}80%{border-color:#9bbc0f;box-shadow:0 0 7px #9bbc0f88;}}
+  .ghudFlash{animation:hudPulse 0.55s ease 4;}
   @media (max-width:380px){.title-cn{font-size:19px;}}
 </style>
 </head>
@@ -107,15 +112,20 @@
       <div class="title-en">ROAD&nbsp;TRIP&nbsp;CAR&nbsp;QUEST</div>
       <div class="howto">
         <h3>🎮 操作說明</h3>
-        <div class="ctrl"><span class="ico">▲<br></span><span class="ico">▼</span>
-          <span><b>上下</b>：在 4 條車道間切換，把車開到你想選的「路牌」</span></div>
+        <div class="ctrl"><span class="ico">✚</span>
+          <span>用畫面<b>下方的十字鍵</b>操作（或鍵盤方向鍵）</span></div>
+        <div class="ctrl"><span class="ico">▲ ▼</span>
+          <span><b>上下</b>：在 4 條車道間切換，開到你想選的「路牌」</span></div>
         <div class="ctrl"><span class="ico">◀ ▶</span>
-          <span><b>左右</b>：自由控制前進／後退，調整衝向路牌的時機</span></div>
+          <span><b>左右</b>：控制前進／後退，調整衝向路牌的時機</span></div>
         <div class="ctrl"><span class="ico">🪙</span>
           <span>沿路<b>收金幣</b>加分，<b>閃避三角錐</b>（撞到會扣分＋震動）</span></div>
         <div class="ctrl"><span class="ico">🏁</span>
           <span>跑完 <b>10 個路口</b>，推薦你的命定車款＋專屬稱號</span></div>
-        <div class="ctrl" style="font-size:10.5px;color:#9ab87a;margin-top:9px;">
+        <div class="ctrl" style="background:#1a300f;border:2px solid #ffe07a66;border-radius:5px;padding:8px 10px;margin-top:6px;gap:8px;">
+          <span style="font-size:15px;flex:0 0 auto;">💡</span>
+          <span><b style="color:#ffe07a;">題目出現在遊戲畫面上方的黃框</b>，路牌上是你的答案選項！路口快來時畫面中央也會彈出提示</span></div>
+        <div class="ctrl" style="font-size:10.5px;color:#9ab87a;margin-top:4px;">
           📱 手機：直接<b>用手指拖曳</b>小車即可同時控制上下左右</div>
       </div>
       <button class="btn red" onclick="startGame()"><span class="blink">▶ PRESS START</span></button>
@@ -127,20 +137,7 @@
       <div class="ghud" id="ghud">準備出發！</div>
       <div class="gamewrap">
         <canvas id="game" width="360" height="320"></canvas>
-        <div id="tip"><span>↑↓ 換車道　←→ 控制前後　拖曳也可以！</span></div>
-      </div>
-      <div class="pad">
-        <div class="padcluster">
-          <div class="padcol">
-            <button class="padbtn" id="btnUp">▲</button>
-            <button class="padbtn" id="btnDown">▼</button>
-          </div>
-          <div class="padcol">
-            <button class="padbtn" id="btnBack">◀</button>
-            <button class="padbtn" id="btnFwd">▶</button>
-          </div>
-        </div>
-        <div class="hint">▲▼ 換車道<br>◀▶ 前後</div>
+        <div id="tip"><span>用下方十字鍵操作，或直接拖曳小車！</span></div>
       </div>
     </section>
 
@@ -156,7 +153,17 @@
 
   </div></div>
   <div class="controls">
-    <div class="dpad"><i class="h"></i><i class="v"></i></div>
+    <div class="dpad" id="dpad">
+      <button class="dbtn up" id="dUp" aria-label="上">▲</button>
+      <button class="dbtn left" id="dLeft" aria-label="左">◀</button>
+      <span class="dcenter"></span>
+      <button class="dbtn right" id="dRight" aria-label="右">▶</button>
+      <button class="dbtn down" id="dDown" aria-label="下">▼</button>
+    </div>
+    <div class="cmid">
+      <div class="ctag">▲▼ 換車道</div>
+      <div class="ctag">◀▶ 前後</div>
+    </div>
     <div class="ab"><b>B</b><b>A</b></div>
     <div class="speaker"><i></i><i></i><i></i></div>
   </div>
@@ -286,10 +293,10 @@ function newGame(){
   const scores={};for(const k in CARS)scores[k]=0;
   return{scores,lane:1,carY:laneY(1),carX:90,
     leftHeld:false,rightHeld:false,dragging:false,dragX:90,
-    traveled:0,speed:1.05,targetSpeed:1.05,scroll:0,
+    traveled:0,speed:1.05,scroll:0,
     gates:[],coins:[],cones:[],decor:[],
-    gatesSpawned:0,gatesDecided:0,nextGateDist:300,gateGap:520,
-    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,
+    gatesSpawned:0,gatesDecided:0,nextGateDist:300,gateGap:680,
+    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,qFlash:0,qFlashText:'',
     coinCount:0,hits:0,startT:0,
     scenesRun:pickScenes(4),curScene:0,sceneFade:1,
     finished:false,last:null,raf:0,flash:0,shake:0,tipHidden:false};
@@ -302,11 +309,14 @@ function startGame(){beep(660,0.08);fitCanvas();G=newGame();G.startT=performance
   show('play');setPrompt();loop();}
 function setPrompt(){const el=document.getElementById('ghud');
   const qi=Math.min(G.gatesDecided,QUESTIONS.length-1);
-  el.innerHTML=`路口 <b>${Math.min(G.gatesDecided+1,10)}/10</b> ・ ${QUESTIONS[qi].q}`;}
+  el.innerHTML=`<span class="qlabel">Q${Math.min(G.gatesDecided+1,10)}/10</span>${QUESTIONS[qi].q}`;
+  el.classList.remove('ghudFlash');void el.offsetWidth;el.classList.add('ghudFlash');}
 
 /* ===== 生成 ===== */
 function spawnGate(){const qi=G.gatesSpawned;
-  G.gates.push({x:W+12,w:118,qi,order:shuffle(4),decided:false,chosen:-1});G.gatesSpawned++;setPrompt();}
+  G.gates.push({x:W+12,w:118,qi,order:shuffle(4),decided:false,chosen:-1});
+  G.qFlash=150;G.qFlashText=QUESTIONS[qi].q;
+  G.gatesSpawned++;setPrompt();}
 function spawnCoin(){const l=Math.random()*LANES|0;G.coins.push({x:W+10,lane:l,got:false});}
 function spawnCone(){const l=Math.random()*LANES|0;G.cones.push({x:W+10,lane:l,hit:false});}
 function spawnDecor(){const sc=curSceneObj(),ty=sc.decor;let d={x:W+20,type:ty};
@@ -319,16 +329,8 @@ function spawnDecor(){const sc=curSceneObj(),ty=sc.decor;let d={x:W+20,type:ty};
 /* ===== 更新 ===== */
 function update(){const g=G;
   g.traveled+=g.speed;g.scroll=(g.scroll+g.speed)%40;
-  // 接近路口自動減速；路口結束後慢慢回速
-  const approachGate=g.gates.find(ga=>!ga.decided&&ga.x>g.carX+10&&ga.x<380);
-  if(approachGate){
-    const d=Math.max(0,approachGate.x-g.carX);
-    // 距離 380→carX+10 期間，速度從 1.1 線性降到 0.38
-    g.targetSpeed=clamp(0.38+(d/370)*0.72,0.38,1.1);
-  } else if(g.targetSpeed<1.5){
-    g.targetSpeed=Math.min(1.5,g.targetSpeed+0.0005);
-  }
-  g.speed+=(g.targetSpeed-g.speed)*0.07;
+  if(g.speed<1.5)g.speed+=0.00035;
+  if(g.qFlash>0)g.qFlash--;
 
   const targetScene=Math.min(3,Math.floor(g.gatesDecided/3));
   if(targetScene!==g.curScene){g.curScene=targetScene;g.sceneFade=0;}
@@ -438,9 +440,12 @@ function draw(){const g=G;
       let col=GATE_COLORS[i%4];if(ga.decided)col=(i===ga.chosen)?col:'#2b2f35';
       px(ga.x,ry+1,ga.w,laneH-2,col);px(ga.x,ry+1,4,laneH-2,'#0008');px(ga.x+ga.w-4,ry+1,4,laneH-2,'#0008');
       ctx.fillStyle=(ga.decided&&i!==ga.chosen)?'#777':'#fff';
-      ctx.font='800 17px "Noto Sans TC","Microsoft JhengHei",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.lineWidth=3;ctx.strokeStyle='#0009';
-      ctx.strokeText(q.opts[oi].t,ga.x+ga.w/2,ry+laneH/2);ctx.fillText(q.opts[oi].t,ga.x+ga.w/2,ry+laneH/2);}
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#0009';
+      // 自動縮放字體，確保文字不超出路牌寬度
+      const label=q.opts[oi].t;const maxW=ga.w-14;let fs=17;
+      ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;
+      while(ctx.measureText(label).width>maxW&&fs>10){fs--;ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;}
+      ctx.strokeText(label,ga.x+ga.w/2,ry+laneH/2);ctx.fillText(label,ga.x+ga.w/2,ry+laneH/2);}
     if(!ga.decided){
       // 目前選定車道高亮框
       ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.strokeRect(ga.x+2,roadTop+bi*laneH+2,ga.w-4,laneH-4);
@@ -454,6 +459,22 @@ function draw(){const g=G;
 
   drawCarTop(g.carX,g.carY,'#EB0A1E','#9e0814');
   if(g.flash>0){ctx.fillStyle=`rgba(255,255,255,${g.flash/22})`;ctx.fillRect(-20,0,W+40,H);}
+
+  // 新題目橫幅（淡入→停留→淡出，顯示在畫面上方路面處）
+  if(g.qFlash>0){
+    const f=g.qFlash;
+    let a=f>132?(150-f)/18:f>20?1:f/20;a=clamp(a,0,1);
+    ctx.save();
+    ctx.fillStyle=`rgba(5,20,8,${a*0.9})`;ctx.fillRect(0,roadTop,W,64);
+    ctx.fillStyle=`rgba(27,52,22,${a*0.96})`;ctx.fillRect(6,roadTop+6,W-12,52);
+    ctx.strokeStyle=`rgba(255,220,50,${a})`;ctx.lineWidth=2.5;ctx.strokeRect(6,roadTop+6,W-12,52);
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle=`rgba(255,220,50,${a*0.9})`;ctx.font='700 9px "Press Start 2P",monospace';
+    ctx.fillText('─◆─ 問 題 來 了 ─◆─',W/2,roadTop+19);
+    ctx.fillStyle=`rgba(234,255,214,${a})`;ctx.font='900 22px "Noto Sans TC","Microsoft JhengHei",sans-serif';
+    ctx.fillText(g.qFlashText,W/2,roadTop+43);
+    ctx.restore();
+  }
 
   ctx.font='10px "Press Start 2P",monospace';ctx.textBaseline='top';ctx.lineWidth=3;ctx.strokeStyle='#000';
   ctx.textAlign='left';const t1=`COIN ${String(g.coinCount).padStart(2,'0')}`;ctx.strokeText(t1,8,6);ctx.fillStyle='#ffe07a';ctx.fillText(t1,8,6);
@@ -613,8 +634,8 @@ function holdBtn(id,prop){const b=document.getElementById(id);
   const on=e=>{if(G)G[prop]=true;e.preventDefault();};const off=()=>{if(G)G[prop]=false;};
   b.addEventListener('mousedown',on);b.addEventListener('touchstart',on,{passive:false});
   b.addEventListener('mouseup',off);b.addEventListener('mouseleave',off);b.addEventListener('touchend',off);}
-tapBtn('btnUp',()=>vMove(-1));tapBtn('btnDown',()=>vMove(1));
-holdBtn('btnBack','leftHeld');holdBtn('btnFwd','rightHeld');
+tapBtn('dUp',()=>vMove(-1));tapBtn('dDown',()=>vMove(1));
+holdBtn('dLeft','leftHeld');holdBtn('dRight','rightHeld');
 addEventListener('resize',()=>{fitCanvas();if(document.getElementById('start').classList.contains('active'))renderSprite('startSprite',carSprite('#EB0A1E','#9e0814'),cellFor(9));});
 
 renderSprite('startSprite',carSprite('#EB0A1E','#9e0814'),cellFor(9));
