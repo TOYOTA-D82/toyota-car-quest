@@ -293,10 +293,10 @@ function newGame(){
   const scores={};for(const k in CARS)scores[k]=0;
   return{scores,lane:1,carY:laneY(1),carX:90,
     leftHeld:false,rightHeld:false,dragging:false,dragX:90,
-    traveled:0,speed:1.05,scroll:0,
+    traveled:0,speed:1.2,scroll:0,lastT:0,
     gates:[],coins:[],cones:[],decor:[],
     gatesSpawned:0,gatesDecided:0,nextGateDist:300,gateGap:680,
-    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,qFlash:0,qFlashText:'',qAnnouncedFor:-1,
+    nextCoinDist:120,nextConeDist:240,nextDecorDist:60,bannerText:'',bannerAlpha:0,
     coinCount:0,hits:0,startT:0,
     scenesRun:pickScenes(4),curScene:0,sceneFade:1,
     finished:false,last:null,raf:0,flash:0,shake:0,tipHidden:false};
@@ -304,7 +304,7 @@ function newGame(){
 function curSceneObj(){return SCENES[G.scenesRun[G.curScene]];}
 
 /* ===== 開始 ===== */
-function startGame(){beep(660,0.08);fitCanvas();G=newGame();G.startT=performance.now();
+function startGame(){beep(660,0.08);fitCanvas();G=newGame();G.startT=performance.now();G.lastT=G.startT;
   const tip=document.getElementById('tip');tip.style.opacity='1';
   show('play');setPrompt();loop();}
 function setPrompt(){const el=document.getElementById('ghud');
@@ -314,7 +314,10 @@ function setPrompt(){const el=document.getElementById('ghud');
 
 /* ===== 生成 ===== */
 function spawnGate(){const qi=G.gatesSpawned;
-  G.gates.push({x:W+12,w:118,qi,order:shuffle(4),decided:false,chosen:-1});
+  const opts=QUESTIONS[qi].opts,order=shuffle(4),gw=118,maxW=gw-14;
+  const fontSizes=order.map(oi=>{let fs=17;ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;
+    while(ctx.measureText(opts[oi].t).width>maxW&&fs>10){fs--;ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;}return fs;});
+  G.gates.push({x:W+12,w:gw,qi,order,fontSizes,decided:false,chosen:-1});
   G.gatesSpawned++;setPrompt();}
 function spawnCoin(){const l=Math.random()*LANES|0;G.coins.push({x:W+10,lane:l,got:false});}
 function spawnCone(){const l=Math.random()*LANES|0;G.cones.push({x:W+10,lane:l,hit:false});}
@@ -326,44 +329,41 @@ function spawnDecor(){const sc=curSceneObj(),ty=sc.decor;let d={x:W+20,type:ty};
   G.decor.push(d);}
 
 /* ===== 更新 ===== */
-function update(){const g=G;
-  g.traveled+=g.speed;g.scroll=(g.scroll+g.speed)%40;
-  if(g.speed<1.5)g.speed+=0.00035;
-  if(g.qFlash>0)g.qFlash--;
+function update(dt){const g=G;
+  g.traveled+=g.speed*dt;g.scroll=(g.scroll+g.speed*dt)%40;
 
   const targetScene=Math.min(3,Math.floor(g.gatesDecided/3));
   if(targetScene!==g.curScene){g.curScene=targetScene;g.sceneFade=0;}
-  if(g.sceneFade<1)g.sceneFade=Math.min(1,g.sceneFade+0.02);
+  if(g.sceneFade<1)g.sceneFade=Math.min(1,g.sceneFade+0.02*dt);
 
-  // 提前預告即將到來的題目：路口生成前約 150 距離就先彈出「問題來了」橫幅
-  if(g.gatesSpawned<QUESTIONS.length&&g.qAnnouncedFor<g.gatesSpawned&&g.traveled>=g.nextGateDist-150){
-    g.qFlash=190;g.qFlashText=QUESTIONS[g.gatesSpawned].q;g.qAnnouncedFor=g.gatesSpawned;setPrompt();
-  }
   if(g.gatesSpawned<QUESTIONS.length&&g.traveled>=g.nextGateDist){spawnGate();g.nextGateDist+=g.gateGap;}
   const qLeft=g.gatesSpawned<QUESTIONS.length;
   const untilGate=g.nextGateDist-g.traveled;
-  const gateAtEntry=g.gates.some(ga=>ga.x>286&&ga.x<400); // 路口正從右側進場，避免物件疊在牆上
-  // 金幣：高頻率。新物件都從最右側進場，永遠在現有路口的「後方」，因此不會貼著選項；
-  // 只在「路口正進場」或「下一個路口快出現(140內)」時暫停 → 不會整批清除、也不會突然消失
+  const gateAtEntry=g.gates.some(ga=>ga.x>286&&ga.x<400);
   if(g.traveled>=g.nextCoinDist){
     if(!gateAtEntry&&!(qLeft&&untilGate<140))spawnCoin();
     g.nextCoinDist+=30+Math.random()*34;
   }
-  // 三角錐：頻率較低，且離路口更遠(210內不放) → 選答案的跑道一定乾淨，不會逼你撞
   if(g.traveled>=g.nextConeDist){
     if(!gateAtEntry&&!(qLeft&&untilGate<210))spawnCone();
     g.nextConeDist+=140+Math.random()*90;
   }
   if(g.traveled>=g.nextDecorDist){spawnDecor();g.nextDecorDist+=50+Math.random()*70;}
 
+  // 題目橫幅：路口生成前 330 距離就提早顯示；路口進場(x<330)後淡出 → 不擋路牌、方便讀答案
+  let bTarget=0;const up=g.gates.find(ga=>!ga.decided);
+  if(up){if(up.x>330){bTarget=1;g.bannerText=QUESTIONS[up.qi].q;}}
+  else if(qLeft&&untilGate<330){bTarget=1;g.bannerText=QUESTIONS[g.gatesSpawned].q;}
+  g.bannerAlpha+=(bTarget-g.bannerAlpha)*Math.min(1,0.22*dt);
+
   // 水平：自由平滑前後
-  if(g.dragging){g.carX+=(g.dragX-g.carX)*0.32;}
-  else{if(g.rightHeld)g.carX+=3.0;if(g.leftHeld)g.carX-=3.0;}
+  if(g.dragging){g.carX+=(g.dragX-g.carX)*Math.min(1,0.32*dt);}
+  else{if(g.rightHeld)g.carX+=3.0*dt;if(g.leftHeld)g.carX-=3.0*dt;}
   g.carX=clamp(g.carX,X_MIN,X_MAX);
   // 垂直：四車道平滑緩動
-  g.carY+=(laneY(g.lane)-g.carY)*0.3;
+  g.carY+=(laneY(g.lane)-g.carY)*Math.min(1,0.3*dt);
 
-  for(const ga of g.gates){ga.x-=g.speed;
+  for(const ga of g.gates){ga.x-=g.speed*dt;
     if(!ga.decided&&ga.x+ga.w/2<=g.carX){
       ga.decided=true;ga.chosen=g.lane;g.gatesDecided++;
       const opt=QUESTIONS[ga.qi].opts[ga.order[g.lane]];
@@ -372,19 +372,19 @@ function update(){const g=G;
       if(g.gatesDecided>=QUESTIONS.length)g.last=ga;}}
   g.gates=g.gates.filter(ga=>{if(ga.x<-ga.w-6){if(ga===g.last)finish();return false;}return true;});
 
-  for(const c of g.coins){c.x-=g.speed;const cy=laneY(c.lane);
+  for(const c of g.coins){c.x-=g.speed*dt;const cy=laneY(c.lane);
     if(!c.got&&Math.abs(c.x-g.carX)<18&&Math.abs(cy-g.carY)<16){c.got=true;g.coinCount++;beep(1180,0.05,'triangle',0.05);}}
   g.coins=g.coins.filter(c=>!c.got&&c.x>-16);
-  for(const o of g.cones){o.x-=g.speed;const oy=laneY(o.lane);
+  for(const o of g.cones){o.x-=g.speed*dt;const oy=laneY(o.lane);
     if(!o.hit&&Math.abs(o.x-g.carX)<16&&Math.abs(oy-g.carY)<15){o.hit=true;g.hits++;g.coinCount=Math.max(0,g.coinCount-2);
       g.shake=16;beep(120,0.16,'sawtooth',0.06);}}
   g.cones=g.cones.filter(o=>!o.hit&&o.x>-16);
 
-  for(const d of g.decor)d.x-=g.speed*0.55;
+  for(const d of g.decor)d.x-=g.speed*0.55*dt;
   g.decor=g.decor.filter(d=>d.x>-90);
 
-  if(g.flash>0)g.flash--;
-  if(g.shake>0)g.shake-=0.9;
+  if(g.flash>0)g.flash-=dt;
+  if(g.shake>0)g.shake-=0.9*dt;
 
   if(!g.tipHidden&&g.traveled>150){g.tipHidden=true;document.getElementById('tip').style.opacity='0';}
 }
@@ -444,10 +444,8 @@ function draw(){const g=G;
       px(ga.x,ry+1,ga.w,laneH-2,col);px(ga.x,ry+1,4,laneH-2,'#0008');px(ga.x+ga.w-4,ry+1,4,laneH-2,'#0008');
       ctx.fillStyle=(ga.decided&&i!==ga.chosen)?'#777':'#fff';
       ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='#0009';
-      // 自動縮放字體，確保文字不超出路牌寬度
-      const label=q.opts[oi].t;const maxW=ga.w-14;let fs=17;
-      ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;
-      while(ctx.measureText(label).width>maxW&&fs>10){fs--;ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;}
+      const label=q.opts[oi].t;
+      ctx.font=`800 ${ga.fontSizes?ga.fontSizes[i]:15}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;
       ctx.strokeText(label,ga.x+ga.w/2,ry+laneH/2);ctx.fillText(label,ga.x+ga.w/2,ry+laneH/2);}
     if(!ga.decided){
       // 目前選定車道高亮框
@@ -464,9 +462,8 @@ function draw(){const g=G;
   if(g.flash>0){ctx.fillStyle=`rgba(255,255,255,${g.flash/22})`;ctx.fillRect(-20,0,W+40,H);}
 
   // 新題目橫幅（淡入→停留→淡出，顯示在畫面上方路面處）
-  if(g.qFlash>0){
-    const f=g.qFlash;
-    let a=f>172?(190-f)/18:f>20?1:f/20;a=clamp(a,0,1);
+  if(g.bannerAlpha>0.02){
+    const a=clamp(g.bannerAlpha,0,1);
     ctx.save();
     ctx.fillStyle=`rgba(5,20,8,${a*0.9})`;ctx.fillRect(0,roadTop,W,64);
     ctx.fillStyle=`rgba(27,52,22,${a*0.96})`;ctx.fillRect(6,roadTop+6,W-12,52);
@@ -475,7 +472,7 @@ function draw(){const g=G;
     ctx.fillStyle=`rgba(255,220,50,${a*0.9})`;ctx.font='700 9px "Press Start 2P",monospace';
     ctx.fillText('─◆─ 問 題 來 了 ─◆─',W/2,roadTop+19);
     ctx.fillStyle=`rgba(234,255,214,${a})`;ctx.font='900 22px "Noto Sans TC","Microsoft JhengHei",sans-serif';
-    ctx.fillText(g.qFlashText,W/2,roadTop+43);
+    ctx.fillText(g.bannerText,W/2,roadTop+43);
     ctx.restore();
   }
 
@@ -507,7 +504,11 @@ function draw(){const g=G;
   }
   ctx.restore();
 }
-function loop(){if(!G||G.finished)return;update();draw();G.raf=requestAnimationFrame(loop);}
+function loop(now){if(!G||G.finished)return;
+  if(!now)now=performance.now();
+  let dt=(now-G.lastT)/16.667;G.lastT=now;
+  if(!(dt>0))dt=1;dt=clamp(dt,0.4,2.4); // 正規化到 60fps，並避免掉幀時跳太遠
+  update(dt);draw();G.raf=requestAnimationFrame(loop);}
 
 /* ===== 中二稱號 ===== */
 function nickname(winner,coins,hits){
