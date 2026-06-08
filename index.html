@@ -124,7 +124,7 @@
           <span>跑完 <b>10 個路口</b>，推薦你的命定車款＋專屬稱號</span></div>
         <div class="ctrl" style="background:#1a300f;border:2px solid #ffe07a66;border-radius:5px;padding:8px 10px;margin-top:6px;gap:8px;">
           <span style="font-size:15px;flex:0 0 auto;">💡</span>
-          <span><b style="color:#ffe07a;">題目出現在遊戲畫面上方的黃框</b>，路牌上是你的答案選項！路口快來時畫面中央也會彈出提示</span></div>
+          <span><b style="color:#ffe07a;">題目顯示在遊戲畫面上方的黃色框</b>，前方路牌上的就是你的答案選項！</span></div>
         <div class="ctrl" style="font-size:10.5px;color:#9ab87a;margin-top:4px;">
           📱 手機：直接<b>用手指拖曳</b>小車即可同時控制上下左右</div>
       </div>
@@ -339,14 +339,17 @@ function update(dt){const g=G;
   if(g.gatesSpawned<QUESTIONS.length&&g.traveled>=g.nextGateDist){spawnGate();g.nextGateDist+=g.gateGap;}
   const qLeft=g.gatesSpawned<QUESTIONS.length;
   const untilGate=g.nextGateDist-g.traveled;
-  const gateAtEntry=g.gates.some(ga=>ga.x>286&&ga.x<400);
+  // 只要畫面上還有「未作答的路口」，或下一個路口即將出現(130內)，就完全停止生成金幣/三角錐。
+  // → 答案框前後一律淨空，金幣/三角錐永遠不會貼近或重疊路牌，杜絕誘導作答。
+  const gateActive=g.gates.some(ga=>!ga.decided);
+  const blockSpawn=gateActive||(qLeft&&untilGate<130);
   if(g.traveled>=g.nextCoinDist){
-    if(!gateAtEntry&&!(qLeft&&untilGate<140))spawnCoin();
-    g.nextCoinDist+=30+Math.random()*34;
+    if(!blockSpawn)spawnCoin();
+    g.nextCoinDist+=24+Math.random()*22;
   }
   if(g.traveled>=g.nextConeDist){
-    if(!gateAtEntry&&!(qLeft&&untilGate<210))spawnCone();
-    g.nextConeDist+=140+Math.random()*90;
+    if(!blockSpawn)spawnCone();
+    g.nextConeDist+=150+Math.random()*90;
   }
   if(g.traveled>=g.nextDecorDist){spawnDecor();g.nextDecorDist+=50+Math.random()*70;}
 
@@ -459,28 +462,6 @@ function draw(){const g=G;
   ctx.textAlign='left';const t1=`COIN ${String(g.coinCount).padStart(2,'0')}`;ctx.strokeText(t1,8,6);ctx.fillStyle='#ffe07a';ctx.fillText(t1,8,6);
   ctx.textAlign='right';const t2=`GATE ${g.gatesDecided}/10`;ctx.strokeText(t2,W-8,6);ctx.fillStyle='#9bbc0f';ctx.fillText(t2,W-8,6);
 
-  // 路口接近警示：閃動箭頭 + 文字（路口在 280px 內才顯示）
-  const warnGate=g.gates.find(ga=>!ga.decided&&ga.x>g.carX+10&&ga.x<280);
-  if(warnGate){
-    const pulse=Math.sin(Date.now()/180)>0;
-    if(pulse){
-      ctx.save();ctx.textBaseline='top';ctx.textAlign='center';
-      ctx.font='bold 11px "Press Start 2P",monospace';
-      ctx.lineWidth=3;ctx.strokeStyle='#000';
-      const wx=warnGate.x+warnGate.w/2;
-      ctx.strokeText('！路口！',wx,18);ctx.fillStyle='#ffe07a';ctx.fillText('！路口！',wx,18);
-      // 地面上向右閃動箭頭指向路口
-      ctx.font='bold 18px Arial';
-      for(let a=0;a<3;a++){
-        const ax=g.carX+36+a*26;if(ax<warnGate.x-10){
-          ctx.globalAlpha=0.35+a*0.22;
-          ctx.strokeText('▶',ax,roadTop+(roadBot-roadTop)/2-9);
-          ctx.fillStyle='#ffd83d';ctx.fillText('▶',ax,roadTop+(roadBot-roadTop)/2-9);
-        }
-      }
-      ctx.globalAlpha=1;ctx.restore();
-    }
-  }
   ctx.restore();
 }
 function loop(now){if(!G||G.finished)return;
