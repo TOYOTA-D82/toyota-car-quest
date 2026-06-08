@@ -319,8 +319,19 @@ function spawnGate(){const qi=G.gatesSpawned;
     while(ctx.measureText(opts[oi].t).width>maxW&&fs>10){fs--;ctx.font=`800 ${fs}px "Noto Sans TC","Microsoft JhengHei",sans-serif`;}return fs;});
   G.gates.push({x:W+12,w:gw,qi,order,fontSizes,decided:false,chosen:-1});
   G.gatesSpawned++;setPrompt();}
-function spawnCoin(){const l=Math.random()*LANES|0;G.coins.push({x:W+10,lane:l,got:false});}
-function spawnCone(){const l=Math.random()*LANES|0;G.cones.push({x:W+10,lane:l,hit:false});}
+// 在進場點找一條「附近沒有其他金幣/三角錐」的空車道，避免物件重疊黏在一起
+function freeLane(x,minGap){
+  const order=shuffle(LANES);
+  for(const l of order){
+    let ok=true;
+    for(const o of G.coins){if(o.lane===l&&Math.abs(o.x-x)<minGap){ok=false;break;}}
+    if(ok)for(const o of G.cones){if(o.lane===l&&Math.abs(o.x-x)<minGap){ok=false;break;}}
+    if(ok)return l;
+  }
+  return -1; // 四條車道進場處都被占用 → 這次不生成
+}
+function spawnCoin(){const l=freeLane(W+10,42);if(l<0)return;G.coins.push({x:W+10,lane:l,got:false});}
+function spawnCone(){const l=freeLane(W+10,48);if(l<0)return;G.cones.push({x:W+10,lane:l,hit:false});}
 function spawnDecor(){const sc=curSceneObj(),ty=sc.decor;let d={x:W+20,type:ty};
   if(ty==='building'){d.w=20+(Math.random()*26|0);d.h=18+(Math.random()*34|0);d.c='#26303f';}
   else if(ty==='mountain'){d.w=60+(Math.random()*50|0);d.h=30+(Math.random()*22|0);}
