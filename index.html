@@ -30,8 +30,13 @@
   .screen.clean{background:#0c130d;box-shadow:inset 0 0 0 2px #0a160b;}
   .screen.clean::after{display:none;}
   .screen.clean::before{display:none;}
-  /* 結算畫面：隱藏下方十字鍵/AB 按鈕控制列 */
+  /* 結算畫面：拿掉整個外層掌機外框，只留卡片浮在乾淨深色背景上，避免畫面重疊感 */
+  .console.result-mode{background:none;border:none;box-shadow:none;padding:0;border-radius:0;}
+  .console.result-mode .brandbar{display:none;}
   .console.result-mode .controls{display:none;}
+  .console.result-mode .screen-wrap{background:none;box-shadow:none;padding:0;border-radius:0;}
+  .console.result-mode .screen{background:none;box-shadow:none;min-height:0;padding:4px 0 0;}
+  .console.result-mode .screen.clean{background:none;box-shadow:none;}
   .view{display:none;animation:fade .25s ease both;}.view.active{display:block;}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   p{margin:0;}
@@ -208,41 +213,41 @@ const CARS={
 
 /* ===== 10 題（每題 4 選項 → 4 車道）===== */
 const QUESTIONS=[
-  {q:"想為新車準備多少預算？",opts:[
-    {t:"70萬以下",s:{vios:3,yarisCross:2,altis:1,townace:3}},
-    {t:"70~100萬",s:{corollaCross:3,altis:2,yarisCross:1,vios:1,rav4:1}},
-    {t:"100~130萬",s:{rav4:3,camry:1,gr:1,bz4x:2,hilux:2}},
-    {t:"130萬以上",s:{camry:3,sienna:3,bz4x:2,gr:2,hilux:1}}]},
+  {q:"對你來說，買一台車是？",opts:[
+    {t:"代步工具",s:{vios:3,yarisCross:2,altis:1,townace:3}},
+    {t:"生活夥伴",s:{corollaCross:3,altis:2,yarisCross:1,vios:1,rav4:1}},
+    {t:"犒賞自己",s:{rav4:3,camry:1,gr:1,bz4x:2,hilux:2}},
+    {t:"頂級品味",s:{camry:3,sienna:3,bz4x:2,gr:2,hilux:1}}]},
   {q:"理想的週末，你會出現在？",opts:[
-    {t:"秘境露營登山",s:{rav4:3,hilux:3,gr:1,corollaCross:1}},
-    {t:"城市咖啡廳/展覽",s:{corollaCross:2,altis:1,camry:2,bz4x:3,vios:1}},
-    {t:"全家出遊踏青",s:{sienna:3,rav4:2,corollaCross:1}},
-    {t:"山道兜風/賽道",s:{gr:4,hilux:1}}]},
-  {q:"車上最常出現的風景？",opts:[
-    {t:"一個人的歌單",s:{gr:2,yarisCross:2,vios:2,bz4x:2,altis:1}},
-    {t:"和另一半兜風",s:{corollaCross:2,altis:1,camry:2,gr:1,vios:1}},
-    {t:"後座孩子的座椅",s:{sienna:3,rav4:2,corollaCross:1,vios:1}},
-    {t:"滿載朋友與裝備",s:{townace:3,sienna:2,hilux:2,rav4:1}}]},
-  {q:"路上哪種車會讓你回頭？",opts:[
+    {t:"秘境露營",s:{rav4:3,hilux:3,gr:1,corollaCross:1}},
+    {t:"城市咖啡廳",s:{corollaCross:2,altis:1,camry:2,bz4x:3,vios:1}},
+    {t:"全家踏青",s:{sienna:3,rav4:2,corollaCross:1}},
+    {t:"山道賽道",s:{gr:4,hilux:1}}]},
+  {q:"車上最常出現的風景是？",opts:[
+    {t:"一人歌單",s:{gr:2,yarisCross:2,vios:2,bz4x:2,altis:1}},
+    {t:"兩人兜風",s:{corollaCross:2,altis:1,camry:2,gr:1,vios:1}},
+    {t:"孩子座椅",s:{sienna:3,rav4:2,corollaCross:1,vios:1}},
+    {t:"滿載裝備",s:{townace:3,sienna:2,hilux:2,rav4:1}}]},
+  {q:"哪種車會讓你忍不住回頭？",opts:[
     {t:"小巧可愛",s:{yarisCross:3,vios:2}},
     {t:"俐落都會",s:{corollaCross:2,altis:2,camry:1,bz4x:2,vios:1}},
     {t:"威猛休旅",s:{rav4:3,sienna:2,hilux:2}},
     {t:"帥氣跑格",s:{gr:4,camry:1}}]},
-  {q:"開車時，你最想要的感覺？",opts:[
-    {t:"省油顧荷包",s:{altis:3,corollaCross:2,vios:2,yarisCross:1,townace:1}},
-    {t:"平穩又舒適",s:{camry:3,sienna:2,rav4:1}},
-    {t:"輕巧好操控",s:{yarisCross:3,vios:2,corollaCross:1}},
-    {t:"動力夠刺激",s:{gr:4,hilux:1,rav4:1}}]},
-  {q:"這台車主要陪你做什麼？",opts:[
-    {t:"每天通勤代步",s:{altis:2,corollaCross:2,vios:2,bz4x:3,yarisCross:1}},
-    {t:"長途旅行",s:{camry:3,sienna:2,rav4:1,altis:1}},
-    {t:"工作載貨打拼",s:{townace:4,hilux:3,rav4:1}},
-    {t:"到處探索戶外",s:{rav4:3,hilux:2,gr:1}}]},
-  {q:"理想的有車生活，最重要的是？",opts:[
-    {t:"省下錢做更多事",s:{altis:2,corollaCross:2,vios:2,yarisCross:1,townace:1}},
-    {t:"家人開心又舒服",s:{sienna:3,rav4:1,camry:1,corollaCross:1}},
-    {t:"有面子有質感",s:{camry:3,sienna:2,bz4x:1}},
-    {t:"能帶我去任何地方",s:{hilux:3,rav4:2,gr:1,corollaCross:1}}]},
+  {q:"踏進車裡，你最想要的是？",opts:[
+    {t:"省心省油",s:{altis:3,corollaCross:2,vios:2,yarisCross:1,townace:1}},
+    {t:"舒適放鬆",s:{camry:3,sienna:2,rav4:1}},
+    {t:"靈活俐落",s:{yarisCross:3,vios:2,corollaCross:1}},
+    {t:"熱血心跳",s:{gr:4,hilux:1,rav4:1}}]},
+  {q:"想像開著它的日常，比較像？",opts:[
+    {t:"城市通勤",s:{altis:2,corollaCross:2,vios:2,bz4x:3,yarisCross:1}},
+    {t:"家庭旅行",s:{camry:3,sienna:2,rav4:1,altis:1}},
+    {t:"打拼事業",s:{townace:4,hilux:3,rav4:1}},
+    {t:"戶外冒險",s:{rav4:3,hilux:2,gr:1}}]},
+  {q:"有了這台車，你最期待的是？",opts:[
+    {t:"享受生活",s:{altis:2,corollaCross:2,vios:2,yarisCross:1,townace:1}},
+    {t:"家人開心",s:{sienna:3,rav4:1,camry:1,corollaCross:1}},
+    {t:"有型有面",s:{camry:3,sienna:2,bz4x:1}},
+    {t:"自由冒險",s:{hilux:3,rav4:2,gr:1,corollaCross:1}}]},
 ];
 const GATE_COLORS=['#e74c3c','#2d9cdb','#27ae60','#f5a623'];
 
