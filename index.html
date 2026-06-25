@@ -30,6 +30,8 @@
   .screen.clean{background:#0c130d;box-shadow:inset 0 0 0 2px #0a160b;}
   .screen.clean::after{display:none;}
   .screen.clean::before{display:none;}
+  /* 結算畫面：隱藏下方十字鍵/AB 按鈕控制列 */
+  .console.result-mode .controls{display:none;}
   .view{display:none;animation:fade .25s ease both;}.view.active{display:block;}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   p{margin:0;}
@@ -149,7 +151,7 @@
     <section class="view" id="result">
       <img id="cardImg" alt="我的命定車款" style="margin-top:2px;">
       <button class="btn red" onclick="bookTest()" style="margin-top:12px;">🚗 我想預約賞車</button>
-      <button class="btn blue" onclick="downloadCard()">💾 下載分享卡片（限動尺寸）</button>
+      <button class="btn blue" onclick="downloadCard()">💾 下載卡片</button>
       <button class="btn ghost" onclick="restart()">↺ 再玩一次</button>
       <p class="foot">※ 推薦結果僅供參考，實際購車歡迎洽詢 Taiwan TOYOTA 各據點</p>
     </section>
@@ -256,7 +258,8 @@ const SCENE_KEYS=Object.keys(SCENES);
 
 /* ===== 工具 ===== */
 function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');
-  const scr=document.querySelector('.screen');if(scr)scr.classList.toggle('clean',id==='result');}
+  const scr=document.querySelector('.screen');if(scr)scr.classList.toggle('clean',id==='result');
+  const con=document.querySelector('.console');if(con)con.classList.toggle('result-mode',id==='result');}
 let actx;
 function beep(f=440,d=0.06,t='square',v=0.04){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();
   const o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(actx.destination);
@@ -574,6 +577,7 @@ function buildCard(winner,car,match,coins,hits,nick,alts,pct,traits){
   // 3) 六角能力雷達
   cctx.fillStyle='#cfe3a0';cctx.font='900 16px "Noto Sans TC",sans-serif';cctx.fillText('★ 你的駕駛人格雷達 ★',cx,sy+378);
   drawRadar(cx,sy+490,80,traits);
+  cctx.textAlign='center';cctx.textBaseline='alphabetic';
 
   // 4) 也很適合
   rect2(sx+40,sy+612,sw-80,2,'#2c4a2e');
