@@ -213,40 +213,40 @@ const CARS={
 
 /* ===== 10 題（每題 4 選項 → 4 車道）===== */
 const QUESTIONS=[
-  {q:"口袋多了一筆意外之財，最想拿去…",opts:[
+  {q:"意外多了一筆錢，第一個念頭是…",opts:[
     {t:"存起來",s:{vios:3,yarisCross:2,altis:1,townace:3}},
-    {t:"買實用好物",s:{corollaCross:3,altis:2,yarisCross:1,vios:1,rav4:1}},
-    {t:"犒賞自己",s:{rav4:3,camry:1,gr:1,bz4x:2,hilux:2}},
-    {t:"買嚮往精品",s:{camry:3,sienna:3,bz4x:2,gr:2,hilux:1}}]},
-  {q:"難得放假的週末，最想…",opts:[
-    {t:"上山露營",s:{rav4:3,hilux:3,gr:1,corollaCross:1}},
-    {t:"逛街看展",s:{corollaCross:2,altis:1,camry:2,bz4x:3,vios:1}},
-    {t:"全家野餐",s:{sienna:3,rav4:2,corollaCross:1}},
-    {t:"玩極限運動",s:{gr:4,hilux:1}}]},
-  {q:"生活中最常見的畫面，是…",opts:[
-    {t:"一個人獨處",s:{gr:2,yarisCross:2,vios:2,bz4x:2,altis:1}},
-    {t:"和另一半",s:{corollaCross:2,altis:1,camry:2,gr:1,vios:1}},
-    {t:"全家團聚",s:{sienna:3,rav4:2,corollaCross:1,vios:1}},
-    {t:"三五好友",s:{townace:3,sienna:2,hilux:2,rav4:1}}]},
-  {q:"私心偏愛的外型，是…",opts:[
-    {t:"小巧可愛",s:{yarisCross:3,vios:2}},
-    {t:"簡約俐落",s:{corollaCross:2,altis:2,camry:1,bz4x:2,vios:1}},
-    {t:"粗獷硬派",s:{rav4:3,sienna:2,hilux:2}},
-    {t:"帥氣搶眼",s:{gr:4,camry:1}}]},
-  {q:"平常做事的節奏，比較像…",opts:[
-    {t:"從容省事",s:{altis:3,corollaCross:2,vios:2,yarisCross:1,townace:1}},
-    {t:"悠閒享受",s:{camry:3,sienna:2,rav4:1}},
-    {t:"俐落明快",s:{yarisCross:3,vios:2,corollaCross:1}},
-    {t:"衝勁十足",s:{gr:4,hilux:1,rav4:1}}]},
-  {q:"生活的重心，比較偏向…",opts:[
-    {t:"城市通勤",s:{altis:2,corollaCross:2,vios:2,bz4x:3,yarisCross:1}},
-    {t:"四處旅行",s:{camry:3,sienna:2,rav4:1,altis:1}},
+    {t:"買實用的",s:{corollaCross:3,altis:2,yarisCross:1,vios:1,rav4:1}},
+    {t:"吃喝玩樂",s:{rav4:2,camry:2,gr:2,bz4x:2,hilux:1}},
+    {t:"入手精品",s:{camry:3,sienna:3,bz4x:2,gr:1,hilux:1}}]},
+  {q:"一放長假，第一個衝動是…",opts:[
+    {t:"衝山林海邊",s:{rav4:3,hilux:3,gr:1,corollaCross:1}},
+    {t:"逛街喝咖啡",s:{corollaCross:2,altis:1,camry:2,bz4x:3,vios:1}},
+    {t:"家庭旅遊",s:{sienna:3,rav4:2,corollaCross:1}},
+    {t:"運動流汗",s:{gr:4,hilux:1}}]},
+  {q:"最放鬆的時光，畫面是…",opts:[
+    {t:"獨自放空",s:{gr:2,yarisCross:2,vios:2,bz4x:2,altis:1}},
+    {t:"兩人相處",s:{corollaCross:2,altis:1,camry:2,gr:1,vios:1}},
+    {t:"全家同樂",s:{sienna:3,rav4:2,corollaCross:1,vios:1}},
+    {t:"好友相聚",s:{townace:3,sienna:2,hilux:2,rav4:1}}]},
+  {q:"用一種風格形容自己的生活…",opts:[
+    {t:"小資簡約",s:{yarisCross:3,vios:2}},
+    {t:"都會時尚",s:{corollaCross:2,altis:2,camry:1,bz4x:2,vios:1}},
+    {t:"自然不羈",s:{rav4:3,sienna:2,hilux:2}},
+    {t:"個性張揚",s:{gr:4,camry:1}}]},
+  {q:"做決定時，通常會…",opts:[
+    {t:"挑最划算的",s:{altis:3,corollaCross:2,vios:2,yarisCross:1,townace:1}},
+    {t:"選最舒服的",s:{camry:3,sienna:2,rav4:1}},
+    {t:"快狠準決定",s:{yarisCross:3,vios:2,corollaCross:1}},
+    {t:"挑最刺激的",s:{gr:4,hilux:1,rav4:1}}]},
+  {q:"日子大多繞著什麼轉…",opts:[
+    {t:"上班通勤",s:{altis:2,corollaCross:2,vios:2,bz4x:3,yarisCross:1}},
+    {t:"到處旅行",s:{camry:2,sienna:2,rav4:2,altis:1}},
     {t:"打拼事業",s:{townace:4,hilux:3,rav4:1}},
-    {t:"戶外冒險",s:{rav4:3,hilux:2,gr:1}}]},
-  {q:"心目中的美好生活，是…",opts:[
-    {t:"簡單自在",s:{altis:2,corollaCross:2,vios:2,yarisCross:1,townace:1}},
+    {t:"家庭孩子",s:{sienna:3,rav4:2,corollaCross:1}}]},
+  {q:"理想生活的關鍵字是…",opts:[
+    {t:"踏實安穩",s:{altis:2,corollaCross:2,vios:2,yarisCross:1,townace:1}},
     {t:"家人相伴",s:{sienna:3,rav4:1,camry:1,corollaCross:1}},
-    {t:"活得有質感",s:{camry:3,sienna:2,bz4x:1}},
+    {t:"品味質感",s:{camry:3,sienna:2,bz4x:1}},
     {t:"自由冒險",s:{hilux:3,rav4:2,gr:1,corollaCross:1}}]},
 ];
 const GATE_COLORS=['#e74c3c','#2d9cdb','#27ae60','#f5a623'];
