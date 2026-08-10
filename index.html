@@ -198,17 +198,17 @@ function carSprite(body,shade){return{palette:{b:body,d:shade,g:'#9fe6ff',k:'#1a
 
 /* ===== 車款（11 款）===== */
 const CARS={
-  yarisCross:{name:"YARIS CROSS",tag:"都會跨界小休旅",color:["#f4c430","#c79a18"],desc:"靈巧好停、油電超省，車身小但機能滿分。都會新鮮人的第一台車，穿梭巷弄、停車格通通輕鬆搞定！"},
-  corollaCross:{name:"COROLLA CROSS",tag:"國民神車休旅",color:["#2d9cdb","#1c6fa0"],desc:"油電兼顧省油與空間，安全配備齊全又好開。首購族與小家庭的全能首選，一台車打天下！"},
-  altis:{name:"COROLLA ALTIS",tag:"經典油電房車",color:["#7f8a96","#4f5d6b"],desc:"超省油、零件好保養、妥善率高。務實通勤、精打細算的最佳夥伴，開十年都安心。"},
-  rav4:{name:"RAV4",tag:"全能中型休旅",color:["#EB0A1E","#9e0814"],desc:"空間大、底盤穩、油電有力。上山下海、露營載物、全家出遊全都罩得住，戶外咖的夢幻夥伴。"},
-  camry:{name:"CAMRY",tag:"旗艦質感房車",color:["#34495e","#1f2d3a"],desc:"沉穩大器、乘坐寧靜舒適。商務接待、長輩接送都體面，長途高速更是穩到不行的旗艦之選。"},
-  sienna:{name:"SIENNA",tag:"頂級油電 MPV",color:["#46627f","#2d4258"],desc:"頂級油電大型 MPV，乘坐如頭等艙、滑門進出超方便。大家庭出遊與商務接待最尊榮，舒適與氣派的天花板。"},
-  vios:{name:"VIOS",tag:"經濟實惠房車",color:["#7fb3d5","#4a86b0"],desc:"省油好養、空間夠用的入門房車。小資族與社會新鮮人的第一台，代步、業務、買菜全勝任，CP 值超高！"},
-  townace:{name:"TOWN ACE",tag:"創業好夥伴",color:["#e8eaed","#aab0b6"],desc:"能載貨、能跑業務、省油又耐操。頭家圓夢的第一步，小生意大幫手，CP 值爆表的工作車。"},
-  gr:{name:"GR 性能系列",tag:"純粹駕馭樂趣",color:["#EB0A1E","#8c0612"],desc:"為熱血而生！精準操控、強勁動力，GR Yaris／GR86 帶你體驗最純粹的駕駛快感。週末就是要兜風！"},
-  bz4x:{name:"bZ4X",tag:"純電科技休旅",color:["#00b894","#008f72"],desc:"零排放、滿載智慧科技，安靜又有力。搶先擁抱電動未來，科技嘗鮮咖與環保族的時尚之選。"},
-  hilux:{name:"HILUX",tag:"硬派越野皮卡",color:["#5a6b2f","#3c481f"],desc:"硬派中型皮卡，越野猛、載貨強、底盤耐操。上山下海、工地探險都難不倒，狂野不羈的戶外硬漢首選！"},
+  yarisCross:{name:"YARIS CROSS",tag:"都會跨界小休旅",color:["#f4c430","#c79a18"],type:"crossover",desc:"靈巧好停、油電超省，車身小但機能滿分。都會新鮮人的第一台車，穿梭巷弄、停車格通通輕鬆搞定！"},
+  corollaCross:{name:"COROLLA CROSS",tag:"國民神車休旅",color:["#2d9cdb","#1c6fa0"],type:"crossover",desc:"油電兼顧省油與空間，安全配備齊全又好開。首購族與小家庭的全能首選，一台車打天下！"},
+  altis:{name:"COROLLA ALTIS",tag:"經典油電房車",color:["#7f8a96","#4f5d6b"],type:"sedan",desc:"超省油、零件好保養、妥善率高。務實通勤、精打細算的最佳夥伴，開十年都安心。"},
+  rav4:{name:"RAV4",tag:"全能中型休旅",color:["#EB0A1E","#9e0814"],type:"suv",desc:"空間大、底盤穩、油電有力。上山下海、露營載物、全家出遊全都罩得住，戶外咖的夢幻夥伴。"},
+  camry:{name:"CAMRY",tag:"旗艦質感房車",color:["#34495e","#1f2d3a"],type:"sedan",desc:"沉穩大器、乘坐寧靜舒適。商務接待、長輩接送都體面，長途高速更是穩到不行的旗艦之選。"},
+  sienna:{name:"SIENNA",tag:"頂級油電 MPV",color:["#46627f","#2d4258"],type:"mpv",desc:"頂級油電大型 MPV，乘坐如頭等艙、滑門進出超方便。大家庭出遊與商務接待最尊榮，舒適與氣派的天花板。"},
+  vios:{name:"VIOS",tag:"經濟實惠房車",color:["#7fb3d5","#4a86b0"],type:"sedan",desc:"省油好養、空間夠用的入門房車。小資族與社會新鮮人的第一台，代步、業務、買菜全勝任，CP 值超高！"},
+  townace:{name:"TOWN ACE",tag:"創業好夥伴",color:["#e8eaed","#aab0b6"],type:"van",desc:"能載貨、能跑業務、省油又耐操。頭家圓夢的第一步，小生意大幫手，CP 值爆表的工作車。"},
+  gr:{name:"GR 性能系列",tag:"純粹駕馭樂趣",color:["#EB0A1E","#8c0612"],type:"sports",desc:"為熱血而生！精準操控、強勁動力，GR Yaris／GR86 帶你體驗最純粹的駕駛快感。週末就是要兜風！"},
+  bz4x:{name:"bZ4X",tag:"純電科技休旅",color:["#00b894","#008f72"],type:"ev",desc:"零排放、滿載智慧科技，安靜又有力。搶先擁抱電動未來，科技嘗鮮咖與環保族的時尚之選。"},
+  hilux:{name:"HILUX",tag:"硬派越野皮卡",color:["#5a6b2f","#3c481f"],type:"pickup",desc:"硬派中型皮卡，越野猛、載貨強、底盤耐操。上山下海、工地探險都難不倒，狂野不羈的戶外硬漢首選！"},
 };
 
 /* ===== 10 題（每題 4 選項 → 4 車道）===== */
@@ -505,9 +505,30 @@ const cardCanvas=document.getElementById('card'),cctx=cardCanvas.getContext('2d'
 function rr(x,y,w,h,r,c){cctx.fillStyle=c;cctx.beginPath();cctx.moveTo(x+r,y);cctx.arcTo(x+w,y,x+w,y+h,r);
   cctx.arcTo(x+w,y+h,x,y+h,r);cctx.arcTo(x,y+h,x,y,r);cctx.arcTo(x,y,x+w,y,r);cctx.closePath();cctx.fill();}
 function circ(x,y,r,c){cctx.fillStyle=c;cctx.beginPath();cctx.arc(x,y,r,0,7);cctx.fill();}
-function drawCarBig(cx,cy,scale,body,shade){const pal={b:body,d:shade,g:'#9fe6ff',k:'#1a1a1a',s:'#cfd6dd',l:'#ffd83d'};
-  const rows=CAR_DATA,w=rows[0].length,h=rows.length,ox=cx-w*scale/2,oy=cy-h*scale/2;
-  for(let r=0;r<h;r++)for(let c=0;c<w;c++){const ch=rows[r][c];if(pal[ch]){cctx.fillStyle=pal[ch];cctx.fillRect(ox+c*scale,oy+r*scale,scale,scale);}}}
+/* ===== 側視車圖（依車種輪廓區分辨識度）===== */
+function _cg(){const g=[];for(let y=0;y<22;y++)g.push(new Array(40).fill('.'));return g;}
+function _cr(g,x,y,w,h,ch){for(let yy=y;yy<y+h;yy++)for(let xx=x;xx<x+w;xx++)if(xx>=0&&xx<40&&yy>=0&&yy<22)g[yy][xx]=ch;}
+function _cwheel(g,cx){for(let yy=0;yy<22;yy++)for(let xx=0;xx<40;xx++)if(Math.hypot(xx-cx,yy-17)<=4)g[yy][xx]='k';
+  for(let yy=0;yy<22;yy++)for(let xx=0;xx<40;xx++)if(Math.hypot(xx-cx,yy-17)<=1.7)g[yy][xx]='s';}
+function _cshade(g){for(let xx=0;xx<40;xx++)for(let yy=21;yy>=0;yy--){if(g[yy][xx]==='b'){g[yy][xx]='d';break;}}}
+const CAR_SHAPES={
+  sedan(){const g=_cg();_cr(g,3,12,34,5,'b');_cr(g,12,8,17,4,'b');g[8][12]='.';g[8][28]='.';_cr(g,14,9,13,3,'g');g[9][20]='b';g[10][20]='b';g[11][20]='b';_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,10);_cwheel(g,30);_cshade(g);return g;},
+  crossover(){const g=_cg();_cr(g,3,10,34,7,'b');_cr(g,11,6,18,5,'b');g[6][11]='.';g[6][28]='.';_cr(g,13,7,14,3,'g');for(const p of [17,22])for(let y=7;y<10;y++)g[y][p]='b';_cr(g,11,5,18,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,10);_cwheel(g,30);_cshade(g);return g;},
+  suv(){const g=_cg();_cr(g,3,9,34,8,'b');_cr(g,10,5,22,4,'b');g[5][10]='.';g[5][31]='.';g[5][30]='.';_cr(g,12,6,18,2,'g');for(const p of [18,24]){g[6][p]='b';g[7][p]='b';}_cr(g,3,9,34,1,'d');_cr(g,7,15,8,2,'x');_cr(g,26,15,8,2,'x');_cr(g,10,4,22,1,'x');_cr(g,36,12,1,3,'l');_cr(g,3,12,1,3,'t');_cwheel(g,10);_cwheel(g,31);_cshade(g);return g;},
+  mpv(){const g=_cg();_cr(g,2,7,36,10,'b');_cr(g,7,4,27,4,'b');g[4][7]='.';g[4][33]='.';_cr(g,9,5,23,3,'g');for(const p of [15,21,27])for(let y=5;y<8;y++)g[y][p]='b';for(let y=8;y<16;y++)g[y][20]='d';_cr(g,37,12,1,3,'l');_cr(g,2,12,1,3,'t');_cwheel(g,9);_cwheel(g,31);_cshade(g);return g;},
+  van(){const g=_cg();_cr(g,4,4,30,13,'b');_cr(g,25,6,7,4,'g');_cr(g,10,6,11,3,'g');for(let y=6;y<9;y++)g[y][15]='b';_cr(g,33,11,1,3,'l');_cr(g,4,11,1,3,'t');_cwheel(g,11);_cwheel(g,28);_cshade(g);return g;},
+  pickup(){const g=_cg();_cr(g,3,13,34,3,'b');_cr(g,19,7,14,6,'b');g[7][19]='.';_cr(g,21,8,9,3,'g');g[8][26]='b';g[9][26]='b';g[10][26]='b';_cr(g,32,11,5,2,'b');_cr(g,4,10,15,3,'b');_cr(g,6,11,11,1,'d');_cr(g,4,10,15,1,'d');_cr(g,36,12,1,2,'l');_cr(g,3,11,1,2,'t');_cwheel(g,10);_cwheel(g,29);_cshade(g);return g;},
+  sports(){const g=_cg();_cr(g,3,13,34,4,'b');_cr(g,15,10,12,3,'b');g[10][15]='.';g[10][26]='.';_cr(g,17,11,9,2,'g');g[12][34]='.';g[12][35]='.';g[12][36]='.';_cr(g,4,10,8,1,'x');g[11][5]='x';g[11][10]='x';_cr(g,3,15,34,1,'w');_cr(g,33,16,4,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,11);_cwheel(g,30);_cshade(g);return g;},
+  ev(){const g=_cg();_cr(g,3,10,34,7,'b');_cr(g,11,6,18,5,'x');g[6][11]='.';g[6][28]='.';_cr(g,13,7,14,3,'g');for(const p of [17,22])for(let y=7;y<10;y++)g[y][p]='x';_cr(g,34,11,3,3,'x');_cr(g,4,15,32,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,10);_cwheel(g,30);_cshade(g);return g;},
+};
+function drawCarBig(cx,cy,scale,body,shade,type){
+  const pal={b:body,d:shade,g:'#9fe6ff',k:'#1a1a1a',s:'#cfd6dd',l:'#ffe07a',t:'#ff4d4d',x:'#24262a',w:'#f2f3f5'};
+  const grid=(CAR_SHAPES[type]||CAR_SHAPES.sedan)();
+  const s=scale*0.4;                       // 對齊原本車圖的視覺尺寸
+  let minR=99,maxR=-1,minC=99,maxC=-1;
+  for(let r=0;r<22;r++)for(let c=0;c<40;c++)if(grid[r][c]!=='.'){if(r<minR)minR=r;if(r>maxR)maxR=r;if(c<minC)minC=c;if(c>maxC)maxC=c;}
+  const ox=cx-(minC+maxC+1)/2*s, oy=cy-(minR+maxR+1)/2*s, px=Math.ceil(s);
+  for(let r=minR;r<=maxR;r++)for(let c=minC;c<=maxC;c++){const k=grid[r][c];if(pal[k]){cctx.fillStyle=pal[k];cctx.fillRect(Math.round(ox+c*s),Math.round(oy+r*s),px,px);}}}
 function wrapText(text,x,y,maxW,lh){let line='';
   for(const ch of text){const test=line+ch;
     if(cctx.measureText(test).width>maxW&&line){cctx.fillText(line,x,y);line=ch;y+=lh;}else line=test;}
@@ -569,7 +590,7 @@ function buildCard(winner,car,match,coins,hits,nick,alts,pct,traits){
   cctx.fillStyle='#fff4cf';cctx.font='900 27px "Noto Sans TC",sans-serif';cctx.fillText(nick,cx,bgY+58);
 
   // 2) 車 + 車名 + 契合度 + 擊敗百分比
-  drawCarBig(cx,sy+150,14,car.color[0],car.color[1]);
+  drawCarBig(cx,sy+150,14,car.color[0],car.color[1],car.type);
   cctx.fillStyle='#9bbc0f';cctx.font='900 36px "Noto Sans TC",sans-serif';cctx.fillText(car.name,cx,sy+228);
   cctx.fillStyle='#cfe3a0';cctx.font='600 16px "Noto Sans TC",sans-serif';cctx.fillText('「'+car.tag+'」',cx,sy+251);
   rr(cx-100,sy+266,200,36,8,'#27412a');
@@ -590,7 +611,7 @@ function buildCard(winner,car,match,coins,hits,nick,alts,pct,traits){
   const aw=(sw-30)/2,ay=sy+646,ah=66;
   (alts||[]).slice(0,2).forEach((ac,i)=>{const ax=sx+10+i*(aw+10);
     rr(ax,ay,aw,ah,7,'#16301a');rect2(ax,ay,aw,3,'#2c4a2e');
-    drawCarBig(ax+aw/2,ay+25,5,ac.color[0],ac.color[1]);
+    drawCarBig(ax+aw/2,ay+25,5,ac.color[0],ac.color[1],ac.type);
     cctx.fillStyle='#eaffd6';cctx.font='800 15px "Noto Sans TC",sans-serif';cctx.fillText(ac.name,ax+aw/2,ay+57);});
   // 螢幕內 CTA
   cctx.fillStyle='#7d9a5f';cctx.font='700 14px "Noto Sans TC",sans-serif';cctx.fillText('你的命定車款是？快來測測看！',cx,sy+sh-16);
