@@ -209,6 +209,7 @@ const CARS={
   gr:{name:"GR 性能系列",tag:"純粹駕馭樂趣",color:["#EB0A1E","#8c0612"],type:"sports",desc:"為熱血而生！精準操控、強勁動力，GR Yaris／GR86 帶你體驗最純粹的駕駛快感。週末就是要兜風！"},
   bz4x:{name:"bZ4X",tag:"純電科技休旅",color:["#00b894","#008f72"],type:"ev",desc:"零排放、滿載智慧科技，安靜又有力。搶先擁抱電動未來，科技嘗鮮咖與環保族的時尚之選。"},
   hilux:{name:"HILUX",tag:"硬派越野皮卡",color:["#5a6b2f","#3c481f"],type:"pickup",desc:"硬派中型皮卡，越野猛、載貨強、底盤耐操。上山下海、工地探險都難不倒，狂野不羈的戶外硬漢首選！"},
+  crownSport:{name:"CROWN SPORT",tag:"轎跑型格休旅",color:["#d81e2c","#9a1420"],type:"crownsport",desc:"墊高跨界身形配上斜背轎跑線條、黑色懸浮車頂，型格外放又帥氣。想要運動感也要實用空間、要吸睛也要質感的街頭型男首選！"},
 };
 
 /* ===== 10 題（每題 4 選項 → 4 車道）===== */
@@ -216,38 +217,38 @@ const QUESTIONS=[
   {q:"意外多了一筆錢，第一個念頭是…",opts:[
     {t:"存起來",s:{vios:3,yarisCross:2,altis:1,townace:3}},
     {t:"買實用的",s:{corollaCross:3,altis:2,yarisCross:1,vios:1,rav4:1}},
-    {t:"吃喝玩樂",s:{rav4:2,camry:2,gr:2,bz4x:2,hilux:1}},
-    {t:"入手精品",s:{camry:3,sienna:3,bz4x:2,gr:1,hilux:1}}]},
+    {t:"吃喝玩樂",s:{rav4:2,camry:2,gr:2,bz4x:2,hilux:1,crownSport:2}},
+    {t:"入手精品",s:{camry:3,sienna:3,bz4x:2,gr:1,hilux:1,crownSport:2}}]},
   {q:"放假時，最想要的安排是…",opts:[
     {t:"山海戶外",s:{rav4:3,hilux:3,gr:1,corollaCross:1}},
-    {t:"城市走逛",s:{corollaCross:2,altis:1,camry:2,bz4x:3,vios:1}},
+    {t:"城市走逛",s:{corollaCross:2,altis:1,camry:2,bz4x:3,vios:1,crownSport:1}},
     {t:"家庭出遊",s:{sienna:3,rav4:2,corollaCross:1}},
-    {t:"運動健身",s:{gr:4,hilux:1}}]},
+    {t:"運動健身",s:{gr:4,hilux:1,crownSport:3}}]},
   {q:"最放鬆的時光，畫面是…",opts:[
-    {t:"獨自放空",s:{gr:2,yarisCross:2,vios:2,bz4x:2,altis:1}},
-    {t:"兩人相處",s:{corollaCross:2,altis:1,camry:2,gr:1,vios:1}},
+    {t:"獨自放空",s:{gr:2,yarisCross:2,vios:2,bz4x:2,altis:1,crownSport:1}},
+    {t:"兩人相處",s:{corollaCross:2,altis:1,camry:2,gr:1,vios:1,crownSport:2}},
     {t:"全家同樂",s:{sienna:3,rav4:2,corollaCross:1,vios:1}},
     {t:"好友相聚",s:{townace:3,sienna:2,hilux:2,rav4:1}}]},
   {q:"理想的居住空間，是…",opts:[
     {t:"小巧溫馨",s:{yarisCross:3,vios:2}},
-    {t:"都會公寓",s:{corollaCross:2,altis:2,camry:1,bz4x:2,vios:1}},
+    {t:"都會公寓",s:{corollaCross:2,altis:2,camry:1,bz4x:2,vios:1,crownSport:1}},
     {t:"鄉間庭院",s:{rav4:3,sienna:2,hilux:2}},
-    {t:"質感豪宅",s:{camry:3,sienna:1,gr:1}}]},
+    {t:"質感豪宅",s:{camry:3,sienna:1,gr:1,crownSport:3}}]},
   {q:"下手買東西前，第一眼看的是…",opts:[
     {t:"價格划算",s:{altis:3,corollaCross:2,vios:2,yarisCross:1,townace:1}},
-    {t:"品質舒適",s:{camry:3,sienna:2,rav4:1}},
+    {t:"品質舒適",s:{camry:3,sienna:2,rav4:1,crownSport:1}},
     {t:"方便好用",s:{yarisCross:3,vios:2,corollaCross:1}},
-    {t:"與眾不同",s:{gr:4,hilux:1,rav4:1}}]},
+    {t:"與眾不同",s:{gr:4,hilux:1,rav4:1,crownSport:3}}]},
   {q:"平常的生活，圍繞在…",opts:[
-    {t:"通勤上班",s:{altis:2,corollaCross:2,vios:2,bz4x:3,yarisCross:1}},
-    {t:"四處旅行",s:{camry:2,sienna:2,rav4:2,altis:1}},
+    {t:"通勤上班",s:{altis:2,corollaCross:2,vios:2,bz4x:3,yarisCross:1,crownSport:1}},
+    {t:"四處旅行",s:{camry:2,sienna:2,rav4:2,altis:1,crownSport:2}},
     {t:"忙著工作",s:{townace:4,hilux:3,rav4:1}},
     {t:"照顧家庭",s:{sienna:3,rav4:2,corollaCross:1}}]},
   {q:"理想生活的關鍵字是…",opts:[
     {t:"踏實安穩",s:{altis:2,corollaCross:2,vios:2,yarisCross:1,townace:1}},
     {t:"家人相伴",s:{sienna:3,rav4:1,camry:1,corollaCross:1}},
-    {t:"品味質感",s:{camry:3,sienna:2,bz4x:1}},
-    {t:"自由冒險",s:{hilux:3,rav4:2,gr:1,corollaCross:1}}]},
+    {t:"品味質感",s:{camry:3,sienna:2,bz4x:1,crownSport:2}},
+    {t:"自由冒險",s:{hilux:3,rav4:2,gr:1,corollaCross:1,crownSport:2}}]},
 ];
 const GATE_COLORS=['#e74c3c','#2d9cdb','#27ae60','#f5a623'];
 
@@ -496,7 +497,7 @@ function nickname(winner,coins,hits){
   else if(coins>=18)pre='黃金滿載';else if(coins<=4)pre='佛系隨緣';else pre='風馳電掣';
   const suf={gr:'秋名山車神',rav4:'山海征服者',camry:'尊爵掌門人',sienna:'移動城堡主',
     yarisCross:'巷弄遊俠',vios:'省油快遞俠',altis:'省油老賢者',corollaCross:'國民大英雄',
-    bz4x:'未來旅人',townace:'頭家活傳奇',hilux:'荒野硬漢王'}[winner];
+    bz4x:'未來旅人',townace:'頭家活傳奇',hilux:'荒野硬漢王',crownSport:'街頭型格王'}[winner];
   return pre+'の'+suf;
 }
 
@@ -520,6 +521,16 @@ const CAR_SHAPES={
   pickup(){const g=_cg();_cr(g,3,13,34,3,'b');_cr(g,19,7,14,6,'b');g[7][19]='.';_cr(g,21,8,9,3,'g');g[8][26]='b';g[9][26]='b';g[10][26]='b';_cr(g,32,11,5,2,'b');_cr(g,4,10,15,3,'b');_cr(g,6,11,11,1,'d');_cr(g,4,10,15,1,'d');_cr(g,36,12,1,2,'l');_cr(g,3,11,1,2,'t');_cwheel(g,10);_cwheel(g,29);_cshade(g);return g;},
   sports(){const g=_cg();_cr(g,3,13,34,4,'b');_cr(g,15,10,12,3,'b');g[10][15]='.';g[10][26]='.';_cr(g,17,11,9,2,'g');g[12][34]='.';g[12][35]='.';g[12][36]='.';_cr(g,4,10,8,1,'x');g[11][5]='x';g[11][10]='x';_cr(g,3,15,34,1,'w');_cr(g,33,16,4,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,11);_cwheel(g,30);_cshade(g);return g;},
   ev(){const g=_cg();_cr(g,3,10,34,7,'b');_cr(g,11,6,18,5,'x');g[6][11]='.';g[6][28]='.';_cr(g,13,7,14,3,'g');for(const p of [17,22])for(let y=7;y<10;y++)g[y][p]='x';_cr(g,34,11,3,3,'x');_cr(g,4,15,32,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,10);_cwheel(g,30);_cshade(g);return g;},
+  crownsport(){const g=_cg();
+    _cr(g,5,10,32,7,'b');                                   // 墊高跨界車身 rows10-16
+    const roof={6:11,7:10,8:10,9:9,10:9,11:8,12:8,13:7,14:7,15:6,16:6,17:6,18:5,19:5,20:5,21:5,22:5,23:5,24:6,25:7,26:8,27:9,28:9,29:10};
+    for(const c in roof){const cc=+c,t=roof[c];for(let y=t;y<10;y++)g[y][cc]='b';}            // 斜背座艙
+    const pillar=cc=>cc<=8||cc===19||cc===20||cc>=28;
+    for(const c in roof){const cc=+c,t=roof[c];if(cc>=9&&cc<=27&&!pillar(cc))for(let y=t+1;y<=9;y++)g[y][cc]='g';}  // 斜背車窗
+    for(const c in roof){const cc=+c,t=roof[c];g[t][cc]='x';if(pillar(cc))for(let y=t;y<=9;y++)g[y][cc]='x';}       // 黑色懸浮車頂＋A/B/C柱（雙色）
+    _cr(g,6,15,30,2,'x');                                   // 黑色下護板
+    _cr(g,36,12,1,2,'l'); _cr(g,5,11,1,2,'t');
+    _cwheel(g,11); _cwheel(g,30); _cshade(g); return g;},
 };
 function drawCarBig(cx,cy,scale,body,shade,type){
   const pal={b:body,d:shade,g:'#9fe6ff',k:'#1a1a1a',s:'#cfd6dd',l:'#ffe07a',t:'#ff4d4d',x:'#24262a',w:'#f2f3f5'};
@@ -537,7 +548,7 @@ function wrapText(text,x,y,maxW,lh){let line='';
 const TRAIT_LABELS=['精打細算','愛家指數','科技潮人','飆風野馬','顏值控','冒險精神'];
 const CAR_TRAITS={yarisCross:[80,35,45,35,55,40],corollaCross:[70,65,60,40,55,55],altis:[95,45,50,35,50,25],
   rav4:[45,80,60,65,65,95],camry:[50,60,70,55,95,30],sienna:[45,100,70,45,80,40],vios:[85,35,35,30,40,20],
-  townace:[80,85,25,35,25,55],gr:[20,20,55,100,80,75],bz4x:[70,55,100,60,75,50],hilux:[35,75,40,80,55,100]};
+  townace:[80,85,25,35,25,55],gr:[20,20,55,100,80,75],bz4x:[70,55,100,60,75,50],hilux:[35,75,40,80,55,100],crownSport:[25,45,70,70,95,60]};
 function computeTraits(scores){const t=[0,0,0,0,0,0];let tot=0;
   for(const k in scores){const s=scores[k];if(s<=0)continue;tot+=s;const p=CAR_TRAITS[k];for(let i=0;i<6;i++)t[i]+=s*p[i];}
   if(tot>0)for(let i=0;i<6;i++)t[i]/=tot;const mx=Math.max(...t)||1;
