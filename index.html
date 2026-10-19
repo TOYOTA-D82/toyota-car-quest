@@ -522,14 +522,15 @@ const CAR_SHAPES={
   sports(){const g=_cg();_cr(g,3,13,34,4,'b');_cr(g,15,10,12,3,'b');g[10][15]='.';g[10][26]='.';_cr(g,17,11,9,2,'g');g[12][34]='.';g[12][35]='.';g[12][36]='.';_cr(g,4,10,8,1,'x');g[11][5]='x';g[11][10]='x';_cr(g,3,15,34,1,'w');_cr(g,33,16,4,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,11);_cwheel(g,30);_cshade(g);return g;},
   ev(){const g=_cg();_cr(g,3,10,34,7,'b');_cr(g,11,6,18,5,'x');g[6][11]='.';g[6][28]='.';_cr(g,13,7,14,3,'g');for(const p of [17,22])for(let y=7;y<10;y++)g[y][p]='x';_cr(g,34,11,3,3,'x');_cr(g,4,15,32,1,'x');_cr(g,36,13,1,2,'l');_cr(g,3,13,1,2,'t');_cwheel(g,10);_cwheel(g,30);_cshade(g);return g;},
   crownsport(){const g=_cg();
-    _cr(g,5,10,32,7,'b');                                   // 墊高跨界車身 rows10-16
-    const roof={6:11,7:10,8:10,9:9,10:9,11:8,12:8,13:7,14:7,15:6,16:6,17:6,18:5,19:5,20:5,21:5,22:5,23:5,24:6,25:7,26:8,27:9,28:9,29:10};
+    const rear={10:9,11:7,12:6,13:5,14:5,15:6,16:8};                     // 車尾邊緣：中段外凸、上下內收＝圓潤下切
+    for(let y=10;y<=16;y++)for(let x=rear[y];x<=36;x++)g[y][x]='b';      // 墊高跨界車身（圓潤車尾）
+    const roof={8:10,9:9,10:9,11:8,12:8,13:7,14:7,15:6,16:6,17:6,18:5,19:5,20:5,21:5,22:5,23:5,24:6,25:7,26:8,27:9,28:9,29:10};
     for(const c in roof){const cc=+c,t=roof[c];for(let y=t;y<10;y++)g[y][cc]='b';}            // 斜背座艙
-    const pillar=cc=>cc<=8||cc===19||cc===20||cc>=28;
-    for(const c in roof){const cc=+c,t=roof[c];if(cc>=9&&cc<=27&&!pillar(cc))for(let y=t+1;y<=9;y++)g[y][cc]='g';}  // 斜背車窗
-    for(const c in roof){const cc=+c,t=roof[c];g[t][cc]='x';if(pillar(cc))for(let y=t;y<=9;y++)g[y][cc]='x';}       // 黑色懸浮車頂＋A/B/C柱（雙色）
-    _cr(g,6,15,30,2,'x');                                   // 黑色下護板
-    _cr(g,36,12,1,2,'l'); _cr(g,5,11,1,2,'t');
+    const pillar=cc=>cc<=9||cc===19||cc===20||cc>=28;
+    for(const c in roof){const cc=+c,t=roof[c];if(cc>=10&&cc<=27&&!pillar(cc))for(let y=t+1;y<=9;y++)g[y][cc]='g';}  // 斜背車窗
+    for(const c in roof){const cc=+c,t=roof[c];g[t][cc]='x';if(pillar(cc))for(let y=t;y<=9;y++)if(g[y][cc]!=='.')g[y][cc]='x';}  // 黑色懸浮車頂＋A/B/C柱
+    for(let x=rear[15];x<=35;x++)g[15][x]='x'; for(let x=rear[16];x<=35;x++)g[16][x]='x';      // 黑色下護板（順車尾圓角）
+    _cr(g,36,12,1,2,'l'); g[11][7]='t'; g[12][7]='t';                    // 頭燈 / 尾燈
     _cwheel(g,11); _cwheel(g,30); _cshade(g); return g;},
 };
 function drawCarBig(cx,cy,scale,body,shade,type){
